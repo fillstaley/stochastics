@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Peter Ralph" />
+  <meta name="dcterms.date" content="2018-09-24" />
+  <title>Syllabus :: Applied Stochastic Processes :: Math 607, Fall 2018</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+</head>
+<body>
+<header>
+<h1 class="title">Syllabus :: Applied Stochastic Processes :: Math 607, Fall 2018</h1>
+<p class="author">Peter Ralph</p>
+<p class="date">24 September 2018</p>
+</header>
+<ul>
+<li><strong>Class:</strong> 10-11, MWF.</li>
+<li><strong>Office Hours:</strong> TBD</li>
+<li><strong>Instructor:</strong> Peter Ralph (plr@uoregon.edu)</li>
+<li><strong>Office:</strong> 6 Deady Hall and/or 270 Onyx (email to arrange)</li>
+</ul>
+<p>This course is an introduction to the mathematical theory of stochastic processes from a “user’s” perspective. The goals are to become familiar with properties of and techniques for a range of commonly encountered stochastic processes, from an advanced mathematical perspective. The topics we will cover are chosen to be widely useful in modeling in a wide range of fields: we aim to cover the standard toolbox for stochastic modeling and analysis, from biology to mathematics to physics. We will emphasize commonalities across the various mathematical structures, in particular emphasizing the use of generators (and associated semigroups).</p>
+<p>For instance: suppose that a random height function begins at zero and takes independent, random steps either up or down. You probably know that the height at some distance away is approximately Gaussian, but did you know that the set of height differentials between each pair of points on the path form a basis for an isometry of <span class="math inline"><em>L</em><sup>2</sup>(ℝ<sub>+</sub>)</span> and a linear space of square-integrable random variables? We’ll see how to use this fact to model much more general random processes, why <span class="math inline">$e^{t \frac{d^2}{dx^2}}$</span> is convolution with <span class="math inline">$\frac{1}{\sqrt{2\pi}} e^{-x^2/2}$</span>, how to generalize this fact, and why it is useful.</p>
+<p><em>Prerequisites:</em> Students should have a good understanding of linear algebra and either probability or analysis. We won’t be assuming knowledge of measure theory, but will be making somewhat informal use of function spaces (e.g., <span class="math inline"><em>L</em><sup>2</sup>(ℝ)</span>).</p>
+<p><em>Winter 2019:</em> This course is designed to complement a subsequent course, taught by Yashar Ahmadian, which will cover aspects of dynamical systems, bifurcation theory, diffusions and stochastic differential equations, point processes, and random matrix theory.</p>
+<h2 id="course-work-and-assessment">Course work and assessment</h2>
+<p>Every student will be responsible for writing up, in LaTeX, notes for one section of class (two or three days worth on a topic). In addition, students will be expected to turn in the solution to one problem, chosen from a selection throughout the course.</p>
+<h2 id="accessibility">Accessibility</h2>
+<p>I take seriously my responsibility to create inclusive learning environments. Please notify me if there are aspects of the instruction or design of this course that result in barriers to your participation! You are also encouraged to contact the Accessible Education Center in 164 Oregon Hall at 541-346-1155 or uoaec@uoregon.edu.</p>
+<h2 id="course-schedule">Course schedule</h2>
+<p>The following is tentative, and subject to adjustment based on class interest. In general, I’ve listed the mathematical tools and topics covered, but not the associated motivating applications.</p>
+<dl>
+<dt>Weeks 1 and 2 (<em>9/24</em>)</dt>
+<dd><p><strong>Gaussian processes and random fields:</strong> characterization and convergence of discrete systems, rotational invariance, spectral decomposition, Gaussian fields as isometries, continuity and Markovianness. The Laplacian as the generator of a Gaussian Markov process, and connection to harmonic functions. Examples: Brownian motion, Ornstein-Uhlenbeck processes, Gaussian process regression, others.</p>
+<ul>
+<li><a href="https://www.nr.no/directdownload/2437/Abrahamsen_-_A_Review_of_Gaussian_random_fields_and_correlation.pdf">Abrahamsen</a>, <em>A Review of Gaussian random fields and correlation</em></li>
+<li>for more formal detail, see <a href="https://alliance-primo.hosted.exlibrisgroup.com/primo-explore/fulldisplay?docid=CP7195946260001451&amp;context=L&amp;vid=UO&amp;search_scope=everything&amp;tab=default_tab&amp;lang=en_US">Jansen</a>, <em>Gaussian Hilbert Spaces</em></li>
+</ul>
+</dd>
+<dt>Weeks 3 and 4 (<em>10/8</em>)</dt>
+<dd><p><strong>Poisson point processes:</strong> characterization and convergence, coupling, tranformations (coloring, thinning, additivity), moments, Palm measures. Examples: raindrops, random graphs, Poisson counting processes, sawtooth processes. Generators of counting processes and transition probabilities.</p>
+<ul>
+<li><a href="https://books.google.com/books?hl=en&amp;lr=&amp;id=VEiM-OtwDHkC">Kingman</a>, <em>Poisson processes</em></li>
+</ul>
+</dd>
+<dt>Week 5 (<em>10/22</em>)</dt>
+<dd><p><strong>Generators and Semigroups of Markov Processes:</strong> General theory, starting with Dynkin’s formula, spectral decompositions, generalized harmonic functions.</p>
+</dd>
+<dt>Weeks 6 and 7 (<em>10/29</em>)</dt>
+<dd><p><strong>Continuous time Markov chains:</strong></p>
+<ul>
+<li><a href="https://www.stat.berkeley.edu/users/aldous/RWG/book.html">Aldous</a>, <em>Reversible Markov Chains and Random Walks on Graphs</em>.</li>
+<li><a href="https://catalog.hathitrust.org/Record/000578136">Kemeny &amp; Snell</a>, <em>Finite Markov Chains</em>.</li>
+</ul>
+</dd>
+<dt>Weeks 8 and 9 (<em>11/12</em>)</dt>
+<dd><p><strong>Lévy processes:</strong> infinite divisibility and independent increments, general classification. Limits of Poisson jump processes. Transition probabilities by Fourier inversion. Stable processes, and stable subordinators.</p>
+<ul>
+<li><a href="http://www.maths.bath.ac.uk/~ak257/LCSB/part1.pdf">Kyprianou</a>, <em>Lévy Processes and Infinite Divisibility</em>.</li>
+<li><a href="http://paestel.fr/sites/default/files/Mat_les_ressources/M2/Cours/J.%20Bertoin_508.pdf">Bertoin</a>, <em>Subordinators: Examples and Applications</em>.</li>
+</ul>
+</dd>
+<dt>Week 10 (<em>11/26</em>)</dt>
+<dd><p><strong>Further topics:</strong> an interesting application or two that brings in tools from the rest of the course.</p>
+</dd>
+</dl>
+<h2 id="readings-and-reference-material">Readings and reference material</h2>
+<p>There is no textbook for the course. Some other books that may be useful for additional exposition and proofs (although most only cover a subset of the material) are:</p>
+<ul>
+<li><p>Liggett, <a href="https://www.ams.org/bookpages/gsm-113">Continuous Time Markov Processes</a></p></li>
+<li><p>Karlin &amp; Taylor, <a href="https://books.google.com/books?id=dr_iBQAAQBAJ">A First Course</a> and <a href="https://books.google.com/books?id=nGy0nAxwOI0C">A Second Course</a> in Stochastic Processes</p></li>
+<li><p>Kallenberg, <a href="https://books.google.com/books?id=2ZYOswEACAAJ">Foundations of Modern Probability</a></p></li>
+<li><p>Çinlar, <a href="https://books.google.com/books?id=GJnUwEBTki0C">Introduction to Stochastic Processes</a></p></li>
+<li><p>Durret, <a href="https://books.google.com/books?id=ced0DQAAQBAJ">Essentials of Stochastic Processes</a></p></li>
+<li><p>Grimmett &amp; Stirzaker, <a href="https://books.google.com/books?id=G3ig-0M4wSIC">Probability and Random Processes</a></p></li>
+</ul>
+<p>However, these are optional: the references given along with each topic in the schedule will be sufficient.</p>
+</body>
+</html>

@@ -1,0 +1,174 @@
+% ==============================================================================
+
+
+
+\documentclass[../../../Master/AppliedStochastics.tex]{subfiles}
+
+
+
+% ==============================================================================
+
+
+\author{Joe}
+\date{28 September 2018}
+
+
+% ==============================================================================
+%
+\begin{document}
+%
+% ==============================================================================
+
+
+\makelecture
+
+
+\section{A Gaussian Process on \texorpdfstring{$L^2(\R)$}{L2(R)}}
+
+
+We will construct a process on $L^2(\R)$
+    by taking a limit of a simpler process on the space of sequences
+\begin{equation*}
+    \ell^2(\R)\defeq \left\{    (a_k)_{k \in\Z} \colon
+        \sum_{k \in \Z} \abs{a_k}^2 < \infty,\, a_k \in \R\right\}\,.
+\end{equation*}
+Given a set of independent random variables $\{X_k\}_{k \in \Z}$
+    satisfying $X_k \sim N(0,1)$
+        (think of each $X_k$ as ``noise" at the integer $k$),
+    define $Z(a)\defeq \sum_{k \in \Z} a_k X_k$ for $a = (a_k) \in \ell^2(\R)$.
+The collection $\{Z(a)\}_{a\in\ell^2(\R)}$ is a Gaussian process
+    that is centered (ie, $\E[Z(a)] = 0$) and satisfies
+\begin{equation*}
+    \var[Z(a)] = \cov\left[
+                    \sum_{k \in \Z} a_k X_k, \sum_{l \in \Z} a_l X_l\right]
+               = \sum_{k, l \in \Z} a_k a_l \cov[X_k, X_l]
+               = \sum_{k \in \Z} a_k^2
+\end{equation*}
+    for each $a\in\ell^2(\R)$.
+
+
+Now recall $L^2(\R) \defeq \{f \mapping{\R, \R} \colon
+    \int_{-\infty}^\infty \abs{f(x)}^2 \dif x <\infty\}$.
+Given $f \in L^2(\R)$,
+    define a sequence of random variables $(Z^{(N)}(f))_{N \in \N}$ by
+\begin{equation*}
+    Z^{(N)}(f) \defeq \frac{1}{\sqrt{N}} \sum_{k \in \Z}
+                        f\left(\frac{k}{N}\right) X_k.
+\end{equation*}
+It can be shown that $Z^{(N)}(f)$ converges in distribution
+    to a random variable which we will call $Z(f)$.
+It can be also shown that the collection $\{Z(f)\}_{f \in L^2(\R)}$
+    is a centered Gaussian process satisfying
+        $\cov[Z(f),Z(g)] = \int_{-\infty}^\infty f(x)g(x) \dif x$.
+It turns out that these properties
+    (centered Gaussian and satisfying the above covariance formula)
+    characterize $\{Z(f)\}_{f\in L^2(\R)}$,
+    so we might as well define it this way:
+
+\begin{definition}
+The collection $\{Z(f)\}_{f \in L^2(\R)}$
+    is \defn{the centered Gaussian process on $L^2(\R)$} satisfying
+\begin{equation*}
+    \cov[Z(f),Z(g)] \defeq \int_{-\infty}^\infty f(x)g(x) \dif x\,.
+\end{equation*}
+\end{definition} 
+
+
+Note that $Z(a f + b g) = a Z(f) + b Z(g)$
+    for all $a, b\in\R$ and all $f, g\in L^2(\R)$,
+    so $f \mapsto Z(f)$ defines a linear map from $L^2(\R)$
+    to the space of random variables.
+The random variable $Z(f)$ is called the \emph{stochastic integral} of $f$,
+    denoted
+\begin{equation*}
+    Z(f) \eqdef \int_{-\infty}^\infty f(t) \dif W_t\,,
+\end{equation*}
+    and the integrator $d W_t$ is interpreted as ``white noise"
+        that weights the value of $f(t)$.
+Assuming it is known that $\cov[dW_s, dW_t] = \delta_s(t) \dif s \dif t$,
+    where $\delta_s$ is the Dirac $\delta$-functional centered at $s$,
+    we can recover the covariance formula using stochastic integral notation:
+\begin{equation*}
+\begin{aligned}
+    \cov[Z(f),Z(g)] &= \cov\left[
+        \int_{-\infty}^\infty f(s) \dif W_s,
+        \int_{-\infty}^\infty g(t) \dif W_t\right]\\
+                    &=\int_{-\infty}^\infty \int_{-\infty}^\infty
+                        f(s) g(t) \, \cov[d W_s, d W_t]
+                     =\int_{-\infty}^\infty f(t)g(t) \dif t.
+\end{aligned}
+\end{equation*}
+
+
+The following examples show that some stochastic processes
+    can be defined as stochastic integrals.
+\begin{example}[Brownian motion]
+    If we define $B_t \defeq Z(\mathbf{1}_{[0, t)}) = \int_0^t \dif W_s$,
+    then the process $\{B_t\}_{t\in[0,\infty)}$ is a Brownian motion.
+Indeed,
+\begin{enumerate}[(i)]
+    \item
+    $B_t$ is Gaussian,
+    
+    \item
+    $\cov[B_s,B_t] = \int_{- \infty}^\infty
+        \mathbf{1}_{[0,s)}(u) \mathbf{1}_{[0,t)}(u) \dif u 
+                   = \int_0^{\min\{s, t\}} \dif u
+                   = \min\{s, t\}$ (and hence $\var[B_t] = t$),
+    
+    \item 
+    if $u < v \leq s < t$ then
+    \begin{equation*}
+        \cov[B_t - B_s, B_v - B_u] = \int_{-\infty}^\infty
+            \mathbf{1}_{[s,t)}(x) \mathbf{1}_{[u,v)}(x) \dif x
+            =\int_{-\infty}^\infty \mathbf{1}_{[s,t) \cap [u,v)}(x) \dif x
+            = 0\,.
+    \end{equation*}
+\end{enumerate}
+\end{example}
+
+
+\begin{example}[Energy]
+    Define a process on $\{Y_t\}_{t\in\R}$ by
+\begin{equation*}
+        Y_t \defeq Z\left(e^{-(t-s)} \mathbf{1}_{(-\infty,t]}(s)\right)
+            = \int_{-\infty}^\infty e^{-(t-s)} \dif W_s\,.
+\end{equation*}
+    Then
+\begin{enumerate}[(i)]
+    \item
+    $Y_t$ is Gaussian,
+    
+    \item
+    for $s\leq t$ we have 
+    \begin{equation*}
+        \cov[Y_s, Y_t] = \int_{-\infty}^\infty
+            e^{-(s-u)} \mathbf{1}_{(-\infty,s]}(u)^2
+            e^{-(t-u)} \mathbf{1}_{(-\infty,t]}(u)^2  \dif u
+        = e^{-s-t} \int_{-\infty}^s e^{2u} \dif u
+        = \frac{e^{-(t-s)}}{2}\,,
+     \end{equation*}
+     and hence $\var[Y_t] = \frac{1}{2}$.
+\end{enumerate}
+\end{example}
+
+
+%\begin{exer}
+%At each position $x$ along a river, a number of mosquitos are born, 
+%independently for each $x$. Let $X_x$ be the difference between this number 
+%and 
+%the average number of mosquitos born (averaged over all locations 
+%$x\in(-\infty,\infty)$) and suppose $\var[X_x]=\sigma^2$ for all $x$. After 
+%birth, each mosquito disposes with a probability of density of moving 
+%displacement $d$ given by $$K(d):=\frac{1}{\pi(1+d^2)}.$$ Describe the density 
+%of mosquitos using a Gaussian process and compute $$\cov[(\#\text{ of 
+%mosquitos 
+%at }x),(\#\text{ of mosquitos at }y)].$$
+%\end{exer}
+
+
+% ==============================================================================
+%
+\end{document}
+%
+% ==============================================================================

@@ -1,0 +1,599 @@
+commit 01f5def80adb86c0c737db2370b8161861c8d230
+Author: peter <petrel.harp@gmail.com>
+Date:   Fri Sep 28 20:55:32 2018 -0700
+
+    initial import
+
+diff --git a/notes/day_01.tex b/notes/day_01.tex
+new file mode 100644
+index 0000000..265a5f5
+--- /dev/null
++++ b/notes/day_01.tex
+@@ -0,0 +1,586 @@
++\documentclass{article}
++\linespread{1.3}
++
++\usepackage{amsmath} %For various math commands%
++\usepackage{amssymb} %For various math symbols%
++\usepackage{amsthm} %For \newtheorem and things like this%
++	\theoremstyle{definition}
++	\newtheorem{thm}{Theorem}[section]
++	\newtheorem{prop}[thm]{Proposition}
++	\newtheorem{coro}[thm]{Corollary}
++	\newtheorem{lemma}[thm]{Lemma}
++	\newtheorem{defn}[thm]{Definition}
++	\newtheorem{exmp}[thm]{Example}
++	\newtheorem{rmk}[thm]{Remark}
++	\newtheorem{exer}[thm]{Exercise}
++	\newtheorem{nota}[thm]{Notation}
++	\newtheorem*{note}{Note}
++	\newtheorem*{sol}{Solution}
++\usepackage{chngcntr} %For the following \counterwithin command%
++	\counterwithin{figure}{section} %For numbering figures differently than everything else%
++\usepackage{cite} %For customized \cite uses%
++\usepackage{enumerate} %For \enumerate customization%
++\usepackage{etex} %For compiling many packages}%
++\usepackage{fancyhdr} %For page-header customization%
++\usepackage{float} %For figure-related commands%
++\usepackage[utf8]{inputenc} %For non-ASCII characters%
++\usepackage[margin=1in]{geometry} %For margins and related things%
++\usepackage{graphicx} %For including pictures from outside files%
++\usepackage{multicol} %For \multicol and related commands%
++\usepackage{pgfplots} %For \plot and related tikz commands%
++\usepackage{subcaption} %For subfigures and related things%
++\usepackage{titling} %For \maketitle and related commands%
++	\setlength{\droptitle}{-8em}  
++\usepackage{tikz} %For tikz%
++\usepackage{tikz-cd} %For tikz commutative diagrams%
++\usepackage{xcolor} %For color mixing%
++\usepackage[all,cmtip]{xy} %For \xymatrix commutative diagrams%
++	\newcommand{\hookar}{\ar@{^{(}->}}
++\usepackage{mathtools} %For arrows with text above and below%
++\usepackage{todonotes} %For making notes in the margins%
++\usetikzlibrary{arrows.meta} %For nice arrows%
++\tikzset{>=latex} %To set the triangle arrows to default%
++
++\newcommand{\E}{\mathbb{E}}
++\newcommand{\N}{\mathbb{N}}
++\newcommand{\PP}{\mathbb{P}}
++\newcommand{\Q}{\mathbb{Q}}
++\newcommand{\R}{\mathbb{R}}
++\newcommand{\Z}{\mathbb{Z}}
++
++\newcommand{\Ann}{\text{Ann}}
++\newcommand{\Aut}{\text{Aut}}
++\newcommand{\Res}{\text{Res}}
++\newcommand{\eps}{\varepsilon}
++\newcommand{\vphi}{\varphi}
++\newcommand{\spec}{\text{sp}}
++\newcommand{\Lt}{\mathtt{Lt}}
++\newcommand{\Tr}{\text{Tr}}
++\newcommand{\setdiv}{\,\big|\,}
++\newcommand{\diag}{\text{diag}}
++\newcommand{\id}{\text{id}}
++\newcommand{\im}{\text{im}}
++\newcommand{\Bott}{\text{Bott}}
++\newcommand{\Ad}{\text{Ad}}
++
++\newcommand{\var}{\,\mathrm{var}}
++\newcommand{\cov}{\,\mathrm{cov}}
++
++\newcommand{\style}{\displaystyle} %To have full-size integrals, sums, etc. in-line%
++
++\setlength{\parindent}{0pt} %To set the indent to zero for the whole document%
++
++%\newenvironment{psmallmatrix}
++%  {\left(\begin{smallmatrix}}
++%  {\end{smallmatrix}\right)}
++
++\begin{document}
++
++\textbf{\Large September 24}\\
++
++\noindent Peter Ralph\\
++plr@uoregon.edu\\
++Office hours: Monday 11-12, Wednesday 9-10\\
++Office: 6 Deady\\
++
++\noindent Survey:
++\begin{enumerate}
++\item Year, department?  Enrolled?
++\item Goals for the course?
++\item Background in probability?
++\item Background in linear algebra?\\
++\end{enumerate}
++
++Outline for schedule: Gaussian processes, then Poisson point processes, then continuous time Markov processes, then Levy processes.\\\\
++
++\textbf{\Large Gaussian Processes}\\
++
++Recall the following definitions:
++\begin{itemize}
++
++\item Covariance: $\cov[X,Y]=\E[(X-\E[X])(Y-\E[Y])]=\E[XY]-\E[X]\E[Y]$
++
++\item Variance: $\var[X]=\cov[X,X]$
++
++\end{itemize}
++
++Covariance is bilinear, so \[\cov[aX+bY,Z]=a\cov[X,Z]+b\cov[Y,Z],\] and in particular, \[\var[aX]=a^2\var[X].\]
++
++Motivation: additive noise.
++
++Let $X_k=\left\{\begin{array}{cc}
++1 &\text{with probability }\frac{1}{2}\\
++-1 & \text{with probability }\frac{1}{2}\\
++\end{array}\right.$ be independent, for $k\in\Z$.  A basic thing we might want to do with these values is add them up.  So, let $S_{k,n}$ be the sum of the $n$ adjacent values starting with the $k$th value.  That is, let $S_{k,n}=\sum_{j=k}^{k+n-1}X_j$.  Note that $\E[X_k]=0$ and $\var[X_k]=1$, and so $\E[S_{k,n}]=0$, $\var[S_{k,n}]=n$.\\\\
++Recall the Central Limit Theorem, which essentially says ``(well-enough behaved) additive noise makes Gaussian distributions".  That is, adding up a bunch of small things that make the same-size contribution and rescaling yields basically a Gaussian distribution.\\\\
++In this case, this says that \[\frac{1}{\sqrt{n}}S_{k,n}\xrightarrow[d]{n\to\infty} N(0,1).\]  i.e. for any $a<b$, \[\PP\left\{a\leq\frac{1}{\sqrt{n}}S_{k,n}\leq b\right\}\xrightarrow{n\to\infty}\int_a^b \frac{1}{2\pi e^{-x^2/2}}dx\] and, for ``any" $f$, \begin{equation}
++\E\left[f\left(\frac{1}{\sqrt{n}}S_{k,n}\right)\right]\xrightarrow{n\to\infty}\E[f(Z)]=\int_{-\infty}^\infty f(x)\frac{1}{\sqrt{2\pi}}e^{-x^2/2}dx,
++\end{equation} where $Z\sim N(0,1)$.\\\\
++
++\textbf{\Large Facts About Gaussian Processes}\\
++
++Say $X\sim N(\mu;\sigma^2)$, i.e. $\style\E[f(X)]=\int_{-\infty}^\infty f(X)\frac{1}{\sqrt{2\pi\sigma^2}}e^{-(X-\mu)^2/2\sigma^2}dx$.  Then \begin{enumerate}
++
++\item (scaling) if $a\in\R$ then $aX\sim N(a\mu,a^2\sigma^2)$
++\item (linearity) if $X\sim N(\mu_X,\sigma_X^2)$ and $Y\sim N(\mu_Y,\sigma_Y^2)$ then $X+Y\sim N(\mu_X+\mu_Y,\sigma_X^2+\sigma_Y^2)$.
++
++\end{enumerate}
++
++Let $X_k$ and $S_{k,n}$ be defined as above.  We can visualize these variables in the following way.  We can visualize $\{X_k\}$ with the following picture:
++\begin{center}
++\begin{tikzpicture}
++\draw[<->] (-3,0)--(11,0);
++\draw[<->] (0,-4)--(0,4);
++\foreach \i in {-2,1,2,6,8,9,10}{
++\draw[->,very thick, magenta] (\i,0)--(\i,1);
++};
++\foreach \i in {-1,0,3,4,5,7}{
++\draw[->, very thick, magenta] (\i,0)--(\i,-1);
++};
++\end{tikzpicture}
++\end{center}
++
++Where the location of the tip of each arrow is $(k,X_k)$.
++
++Then we can visualize $\{S_{0,n}\}_{n=1,2,3,\dots}$ using the following picture:
++
++\begin{center}
++\begin{tikzpicture}
++\draw[<->] (-3,0)--(11,0);
++\draw[<->] (0,-4)--(0,4);
++\foreach \i in {-2,1,2,6,8,9,10}{
++\draw[->,very thick, magenta] (\i,0)--(\i,1);
++};
++\foreach \i in {-1,0,3,4,5,7}{
++\draw[->, very thick, magenta] (\i,0)--(\i,-1);
++};
++\draw[blue, very thick] (0,0)--(1,-1)--(2,0)--(3,1)--(4,0)--(5,-1)--(6,-2)--(7,-1)--(8,-2)--(9,-1)--(10,0);
++\end{tikzpicture}
++\end{center}
++
++Using this picture, if we suppose $m$ and $n$ are the values on the horizontal axis marked below, then $S_{0,m}$ and $S_{0,n}$ are the height of the points marked below.
++
++\begin{center}
++\begin{tikzpicture}
++\draw[<->] (-3,0)--(11,0);
++\draw[<->] (0,-4)--(0,4);
++\foreach \i in {-2,1,2,6,8,9,10}{
++\draw[->,very thick, magenta] (\i,0)--(\i,1);
++};
++\foreach \i in {-1,0,3,4,5,7}{
++\draw[->, very thick, magenta] (\i,0)--(\i,-1);
++};
++\draw[blue, very thick] (0,0)--(1,-1)--(2,0)--(3,1)--(4,0)--(5,-1)--(6,-2)--(7,-1)--(8,-2)--(9,-1)--(10,0);
++\node at (5,0.2) {$m$};
++\node at (8,-0.2) {$n$};
++\fill[blue] (5,-1) circle (3pt) node[below left] {$(m,S_{0,m})$};
++\fill[blue] (8,-2) circle (3pt) node[below] {$(n,S_{0,n})$};
++\end{tikzpicture}
++\end{center}
++
++Additionally, $S_{m,n-m}$ is the signed distance indicated by the green arrow below, which gives the vertical distance from the first blue point to the second.
++
++\begin{center}
++\begin{tikzpicture}
++\draw[<->] (-3,0)--(11,0);
++\draw[<->] (0,-4)--(0,4);
++\foreach \i in {-2,1,2,6,8,9,10}{
++\draw[->,very thick, magenta] (\i,0)--(\i,1);
++};
++\foreach \i in {-1,0,3,4,5,7}{
++\draw[->, very thick, magenta] (\i,0)--(\i,-1);
++};
++\draw[blue, very thick] (0,0)--(1,-1)--(2,0)--(3,1)--(4,0)--(5,-1)--(6,-2)--(7,-1)--(8,-2)--(9,-1)--(10,0);
++\node at (5,0.2) {$m$};
++\node at (8,-0.2) {$n$};
++\fill[blue] (5,-1) circle (3pt) node[below left] {$(m,S_{0,m})$};
++\fill[blue] (8,-2) circle (3pt) node[below] {$(n,S_{0,n})$};
++\draw[green!70!blue, ->, very thick] (6.5,-1)--(6.5,-2);
++\end{tikzpicture}
++\end{center}
++
++This gives a visualization of the fact that for $n\geq m$, \[S_{0,n}=S_{0,m}+S_{m,n-m}.\]
++
++Similarly, we can visualize $\{S_{-2,n}\}_{n=1,2,\dots}$.  The portion of the blue curve that's on the right half of the vertical axis is the same as in the pictures above, since $S_{-2,2}=0$.
++
++\begin{center}
++\begin{tikzpicture}
++\draw[<->] (-3,0)--(11,0);
++\draw[<->] (0,-4)--(0,4);
++\foreach \i in {-2,1,2,6,8,9,10}{
++\draw[->,very thick, magenta] (\i,0)--(\i,1);
++};
++\foreach \i in {-1,0,3,4,5,7}{
++\draw[->, very thick, magenta] (\i,0)--(\i,-1);
++};
++\draw[blue, very thick] (-2,0)--(-1,1)--(0,0)--(1,-1)--(2,0)--(3,1)--(4,0)--(5,-1)--(6,-2)--(7,-1)--(8,-2)--(9,-1)--(10,0);
++\node at (5,0.2) {$m$};
++\node at (7,0.2) {$n$};
++\fill[blue] (5,-1) circle (3pt) node[below left] {$(m,S_{0,m})$};
++\fill[blue] (7,-1);
++\end{tikzpicture}
++\end{center}
++
++Observe that $\var[S_{0,n}]=n$, which can be used to show the more general statement that for $m\leq n$, $\cov[S_{0,m},S_{0,n}]=m$.  This comes from the following chain of equalities:
++\begin{align*}
++\cov[S_{0.m},S_{0,n}]&=\cov[S_{0,m},S_{0,m}+S_{m,n-m}]\\
++&=\cov[S_{0,m},S_{0,m}]+\cov[S_{0,m},S_{m,n-m}]&\text{since }\cov\text{ is bilinear}\\
++&=m+0&\text{since }S_{0,m}\text{ and }S_{m,n-m}\text{ are independent}\\
++&=m.
++\end{align*}
++
++Note that Equation 1 holds in the more general case that $\E[Z]=0$ and $\var[Z]=1$.\\\\
++
++\textbf{\Large Brownian Motion}\\
++
++Let $S_{k,n}$ be defined as above.  Let $\style B_t^{(N)}=\frac{1}{\sqrt{N}}S_{0,\lfloor tN\rfloor}$.  Then let $\style B_t=\lim_{N\to\infty}\frac{1}{\sqrt{N}}S_{0,\lfloor tN\rfloor}$.  Then $\{B_t\}$ is Brownian motion.  We can visualize Brownian motion by considering the graphs yielded by the maps $t\mapsto B^t$ and $t\mapsto B_t^{(N)}$.
++
++For example, if we let $N=25$, the function $t\mapsto B_t^{(N)}$ yields the following graph for $t=0$ to $t=10$, for a particular sequence $\{X_k\}_{k\in\Z_{\geq 0}}$.
++
++\begin{center}
++\begin{tikzpicture}[scale=1.5]
++\draw[<->] (-1,0)--(11,0);
++\draw[<->] (0,-3)--(0,3);
++\foreach \i in {-2,-1,1,2}{
++\draw[-] (0.2,\i)--(-0.2,\i) node[left] {$\i$};
++\draw[-] (10,0.2)--(10,-0.2) node[below] {$10$};
++};
++\draw[-,very thick](0.0, 0.0)--(0.04, 0.0);
++\draw[-,very thick](0.04, 0.2)--(0.08, 0.2);
++\draw[-,very thick](0.08, 0.4)--(0.12, 0.4);
++\draw[-,very thick](0.12, 0.2)--(0.16, 0.2);
++\draw[-,very thick](0.16, 0.0)--(0.2, 0.0);
++\draw[-,very thick](0.2, -0.2)--(0.24, -0.2);
++\draw[-,very thick](0.24, 0.0)--(0.28, 0.0);
++\draw[-,very thick](0.28, -0.2)--(0.32, -0.2);
++\draw[-,very thick](0.32, -0.4)--(0.36, -0.4);
++\draw[-,very thick](0.36, -0.2)--(0.4, -0.2);
++\draw[-,very thick](0.4, -0.4)--(0.44, -0.4);
++\draw[-,very thick](0.44, -0.6)--(0.48, -0.6);
++\draw[-,very thick](0.48, -0.4)--(0.52, -0.4);
++\draw[-,very thick](0.52, -0.6)--(0.56, -0.6);
++\draw[-,very thick](0.56, -0.4)--(0.6, -0.4);
++\draw[-,very thick](0.6, -0.6)--(0.64, -0.6);
++\draw[-,very thick](0.64, -0.4)--(0.68, -0.4);
++\draw[-,very thick](0.68, -0.6)--(0.72, -0.6);
++\draw[-,very thick](0.72, -0.8)--(0.76, -0.8);
++\draw[-,very thick](0.76, -0.6)--(0.8, -0.6);
++\draw[-,very thick](0.8, -0.8)--(0.84, -0.8);
++\draw[-,very thick](0.84, -1.0)--(0.88, -1.0);
++\draw[-,very thick](0.88, -0.8)--(0.92, -0.8);
++\draw[-,very thick](0.92, -0.6)--(0.96, -0.6);
++\draw[-,very thick](0.96, -0.8)--(1.0, -0.8);
++\draw[-,very thick](1.0, -1.0)--(1.04, -1.0);
++\draw[-,very thick](1.04, -0.8)--(1.08, -0.8);
++\draw[-,very thick](1.08, -0.6)--(1.12, -0.6);
++\draw[-,very thick](1.12, -0.8)--(1.16, -0.8);
++\draw[-,very thick](1.16, -0.6)--(1.2, -0.6);
++\draw[-,very thick](1.2, -0.8)--(1.24, -0.8);
++\draw[-,very thick](1.24, -0.6)--(1.28, -0.6);
++\draw[-,very thick](1.28, -0.8)--(1.32, -0.8);
++\draw[-,very thick](1.32, -1.0)--(1.36, -1.0);
++\draw[-,very thick](1.36, -1.2)--(1.4, -1.2);
++\draw[-,very thick](1.4, -1.4)--(1.44, -1.4);
++\draw[-,very thick](1.44, -1.6)--(1.48, -1.6);
++\draw[-,very thick](1.48, -1.4)--(1.52, -1.4);
++\draw[-,very thick](1.52, -1.2)--(1.56, -1.2);
++\draw[-,very thick](1.56, -1.4)--(1.6, -1.4);
++\draw[-,very thick](1.6, -1.6)--(1.64, -1.6);
++\draw[-,very thick](1.64, -1.4)--(1.68, -1.4);
++\draw[-,very thick](1.68, -1.6)--(1.72, -1.6);
++\draw[-,very thick](1.72, -1.4)--(1.76, -1.4);
++\draw[-,very thick](1.76, -1.2)--(1.8, -1.2);
++\draw[-,very thick](1.8, -1.4)--(1.84, -1.4);
++\draw[-,very thick](1.84, -1.2)--(1.88, -1.2);
++\draw[-,very thick](1.88, -1.4)--(1.92, -1.4);
++\draw[-,very thick](1.92, -1.2)--(1.96, -1.2);
++\draw[-,very thick](1.96, -1.0)--(2.0, -1.0);
++\draw[-,very thick](2.0, -0.8)--(2.04, -0.8);
++\draw[-,very thick](2.04, -0.6)--(2.08, -0.6);
++\draw[-,very thick](2.08, -0.4)--(2.12, -0.4);
++\draw[-,very thick](2.12, -0.2)--(2.16, -0.2);
++\draw[-,very thick](2.16, 0.0)--(2.2, 0.0);
++\draw[-,very thick](2.2, 0.2)--(2.24, 0.2);
++\draw[-,very thick](2.24, 0.4)--(2.28, 0.4);
++\draw[-,very thick](2.28, 0.6)--(2.32, 0.6);
++\draw[-,very thick](2.32, 0.4)--(2.36, 0.4);
++\draw[-,very thick](2.36, 0.2)--(2.4, 0.2);
++\draw[-,very thick](2.4, 0.0)--(2.44, 0.0);
++\draw[-,very thick](2.44, 0.2)--(2.48, 0.2);
++\draw[-,very thick](2.48, 0.0)--(2.52, 0.0);
++\draw[-,very thick](2.52, -0.2)--(2.56, -0.2);
++\draw[-,very thick](2.56, 0.0)--(2.6, 0.0);
++\draw[-,very thick](2.6, 0.2)--(2.64, 0.2);
++\draw[-,very thick](2.64, 0.4)--(2.68, 0.4);
++\draw[-,very thick](2.68, 0.6)--(2.72, 0.6);
++\draw[-,very thick](2.72, 0.4)--(2.76, 0.4);
++\draw[-,very thick](2.76, 0.2)--(2.8, 0.2);
++\draw[-,very thick](2.8, 0.0)--(2.84, 0.0);
++\draw[-,very thick](2.84, -0.2)--(2.88, -0.2);
++\draw[-,very thick](2.88, -0.4)--(2.92, -0.4);
++\draw[-,very thick](2.92, -0.2)--(2.96, -0.2);
++\draw[-,very thick](2.96, 0.0)--(3.0, 0.0);
++\draw[-,very thick](3.0, -0.2)--(3.04, -0.2);
++\draw[-,very thick](3.04, 0.0)--(3.08, 0.0);
++\draw[-,very thick](3.08, -0.2)--(3.12, -0.2);
++\draw[-,very thick](3.12, 0.0)--(3.16, 0.0);
++\draw[-,very thick](3.16, 0.2)--(3.2, 0.2);
++\draw[-,very thick](3.2, 0.4)--(3.24, 0.4);
++\draw[-,very thick](3.24, 0.6)--(3.28, 0.6);
++\draw[-,very thick](3.28, 0.8)--(3.32, 0.8);
++\draw[-,very thick](3.32, 1.0)--(3.36, 1.0);
++\draw[-,very thick](3.36, 0.8)--(3.4, 0.8);
++\draw[-,very thick](3.4, 0.6)--(3.44, 0.6);
++\draw[-,very thick](3.44, 0.4)--(3.48, 0.4);
++\draw[-,very thick](3.48, 0.6)--(3.52, 0.6);
++\draw[-,very thick](3.52, 0.8)--(3.56, 0.8);
++\draw[-,very thick](3.56, 0.6)--(3.6, 0.6);
++\draw[-,very thick](3.6, 0.4)--(3.64, 0.4);
++\draw[-,very thick](3.64, 0.6)--(3.68, 0.6);
++\draw[-,very thick](3.68, 0.4)--(3.72, 0.4);
++\draw[-,very thick](3.72, 0.6)--(3.76, 0.6);
++\draw[-,very thick](3.76, 0.8)--(3.8, 0.8);
++\draw[-,very thick](3.8, 0.6)--(3.84, 0.6);
++\draw[-,very thick](3.84, 0.8)--(3.88, 0.8);
++\draw[-,very thick](3.88, 0.6)--(3.92, 0.6);
++\draw[-,very thick](3.92, 0.4)--(3.96, 0.4);
++\draw[-,very thick](3.96, 0.6)--(4.0, 0.6);
++\draw[-,very thick](4.0, 0.4)--(4.04, 0.4);
++\draw[-,very thick](4.04, 0.2)--(4.08, 0.2);
++\draw[-,very thick](4.08, 0.4)--(4.12, 0.4);
++\draw[-,very thick](4.12, 0.6)--(4.16, 0.6);
++\draw[-,very thick](4.16, 0.4)--(4.2, 0.4);
++\draw[-,very thick](4.2, 0.6)--(4.24, 0.6);
++\draw[-,very thick](4.24, 0.4)--(4.28, 0.4);
++\draw[-,very thick](4.28, 0.6)--(4.32, 0.6);
++\draw[-,very thick](4.32, 0.8)--(4.36, 0.8);
++\draw[-,very thick](4.36, 1.0)--(4.4, 1.0);
++\draw[-,very thick](4.4, 0.8)--(4.44, 0.8);
++\draw[-,very thick](4.44, 0.6)--(4.48, 0.6);
++\draw[-,very thick](4.48, 0.4)--(4.52, 0.4);
++\draw[-,very thick](4.52, 0.6)--(4.56, 0.6);
++\draw[-,very thick](4.56, 0.8)--(4.6, 0.8);
++\draw[-,very thick](4.6, 1.0)--(4.64, 1.0);
++\draw[-,very thick](4.64, 1.2)--(4.68, 1.2);
++\draw[-,very thick](4.68, 1.4)--(4.72, 1.4);
++\draw[-,very thick](4.72, 1.2)--(4.76, 1.2);
++\draw[-,very thick](4.76, 1.4)--(4.8, 1.4);
++\draw[-,very thick](4.8, 1.2)--(4.84, 1.2);
++\draw[-,very thick](4.84, 1.4)--(4.88, 1.4);
++\draw[-,very thick](4.88, 1.6)--(4.92, 1.6);
++\draw[-,very thick](4.92, 1.4)--(4.96, 1.4);
++\draw[-,very thick](4.96, 1.2)--(5.0, 1.2);
++\draw[-,very thick](5.0, 1.0)--(5.04, 1.0);
++\draw[-,very thick](5.04, 0.8)--(5.08, 0.8);
++\draw[-,very thick](5.08, 0.6)--(5.12, 0.6);
++\draw[-,very thick](5.12, 0.8)--(5.16, 0.8);
++\draw[-,very thick](5.16, 0.6)--(5.2, 0.6);
++\draw[-,very thick](5.2, 0.8)--(5.24, 0.8);
++\draw[-,very thick](5.24, 0.6)--(5.28, 0.6);
++\draw[-,very thick](5.28, 0.8)--(5.32, 0.8);
++\draw[-,very thick](5.32, 1.0)--(5.36, 1.0);
++\draw[-,very thick](5.36, 1.2)--(5.4, 1.2);
++\draw[-,very thick](5.4, 1.4)--(5.44, 1.4);
++\draw[-,very thick](5.44, 1.6)--(5.48, 1.6);
++\draw[-,very thick](5.48, 1.4)--(5.52, 1.4);
++\draw[-,very thick](5.52, 1.2)--(5.56, 1.2);
++\draw[-,very thick](5.56, 1.0)--(5.6, 1.0);
++\draw[-,very thick](5.6, 0.8)--(5.64, 0.8);
++\draw[-,very thick](5.64, 0.6)--(5.68, 0.6);
++\draw[-,very thick](5.68, 0.4)--(5.72, 0.4);
++\draw[-,very thick](5.72, 0.6)--(5.76, 0.6);
++\draw[-,very thick](5.76, 0.8)--(5.8, 0.8);
++\draw[-,very thick](5.8, 0.6)--(5.84, 0.6);
++\draw[-,very thick](5.84, 0.4)--(5.88, 0.4);
++\draw[-,very thick](5.88, 0.2)--(5.92, 0.2);
++\draw[-,very thick](5.92, 0.4)--(5.96, 0.4);
++\draw[-,very thick](5.96, 0.2)--(6.0, 0.2);
++\draw[-,very thick](6.0, 0.4)--(6.04, 0.4);
++\draw[-,very thick](6.04, 0.2)--(6.08, 0.2);
++\draw[-,very thick](6.08, 0.0)--(6.12, 0.0);
++\draw[-,very thick](6.12, -0.2)--(6.16, -0.2);
++\draw[-,very thick](6.16, -0.4)--(6.2, -0.4);
++\draw[-,very thick](6.2, -0.2)--(6.24, -0.2);
++\draw[-,very thick](6.24, 0.0)--(6.28, 0.0);
++\draw[-,very thick](6.28, 0.2)--(6.32, 0.2);
++\draw[-,very thick](6.32, 0.0)--(6.36, 0.0);
++\draw[-,very thick](6.36, -0.2)--(6.4, -0.2);
++\draw[-,very thick](6.4, -0.4)--(6.44, -0.4);
++\draw[-,very thick](6.44, -0.6)--(6.48, -0.6);
++\draw[-,very thick](6.48, -0.4)--(6.52, -0.4);
++\draw[-,very thick](6.52, -0.2)--(6.56, -0.2);
++\draw[-,very thick](6.56, -0.4)--(6.6, -0.4);
++\draw[-,very thick](6.6, -0.6)--(6.64, -0.6);
++\draw[-,very thick](6.64, -0.4)--(6.68, -0.4);
++\draw[-,very thick](6.68, -0.2)--(6.72, -0.2);
++\draw[-,very thick](6.72, -0.4)--(6.76, -0.4);
++\draw[-,very thick](6.76, -0.6)--(6.8, -0.6);
++\draw[-,very thick](6.8, -0.4)--(6.84, -0.4);
++\draw[-,very thick](6.84, -0.6)--(6.88, -0.6);
++\draw[-,very thick](6.88, -0.8)--(6.92, -0.8);
++\draw[-,very thick](6.92, -0.6)--(6.96, -0.6);
++\draw[-,very thick](6.96, -0.8)--(7.0, -0.8);
++\draw[-,very thick](7.0, -1.0)--(7.04, -1.0);
++\draw[-,very thick](7.04, -0.8)--(7.08, -0.8);
++\draw[-,very thick](7.08, -0.6)--(7.12, -0.6);
++\draw[-,very thick](7.12, -0.4)--(7.16, -0.4);
++\draw[-,very thick](7.16, -0.2)--(7.2, -0.2);
++\draw[-,very thick](7.2, -0.4)--(7.24, -0.4);
++\draw[-,very thick](7.24, -0.2)--(7.28, -0.2);
++\draw[-,very thick](7.28, 0.0)--(7.32, 0.0);
++\draw[-,very thick](7.32, -0.2)--(7.36, -0.2);
++\draw[-,very thick](7.36, 0.0)--(7.4, 0.0);
++\draw[-,very thick](7.4, -0.2)--(7.44, -0.2);
++\draw[-,very thick](7.44, -0.4)--(7.48, -0.4);
++\draw[-,very thick](7.48, -0.6)--(7.52, -0.6);
++\draw[-,very thick](7.52, -0.8)--(7.56, -0.8);
++\draw[-,very thick](7.56, -1.0)--(7.6, -1.0);
++\draw[-,very thick](7.6, -1.2)--(7.64, -1.2);
++\draw[-,very thick](7.64, -1.0)--(7.68, -1.0);
++\draw[-,very thick](7.68, -1.2)--(7.72, -1.2);
++\draw[-,very thick](7.72, -1.0)--(7.76, -1.0);
++\draw[-,very thick](7.76, -0.8)--(7.8, -0.8);
++\draw[-,very thick](7.8, -0.6)--(7.84, -0.6);
++\draw[-,very thick](7.84, -0.4)--(7.88, -0.4);
++\draw[-,very thick](7.88, -0.6)--(7.92, -0.6);
++\draw[-,very thick](7.92, -0.8)--(7.96, -0.8);
++\draw[-,very thick](7.96, -0.6)--(8.0, -0.6);
++\draw[-,very thick](8.0, -0.8)--(8.04, -0.8);
++\draw[-,very thick](8.04, -0.6)--(8.08, -0.6);
++\draw[-,very thick](8.08, -0.4)--(8.12, -0.4);
++\draw[-,very thick](8.12, -0.6)--(8.16, -0.6);
++\draw[-,very thick](8.16, -0.8)--(8.2, -0.8);
++\draw[-,very thick](8.2, -1.0)--(8.24, -1.0);
++\draw[-,very thick](8.24, -0.8)--(8.28, -0.8);
++\draw[-,very thick](8.28, -1.0)--(8.32, -1.0);
++\draw[-,very thick](8.32, -1.2)--(8.36, -1.2);
++\draw[-,very thick](8.36, -1.0)--(8.4, -1.0);
++\draw[-,very thick](8.4, -1.2)--(8.44, -1.2);
++\draw[-,very thick](8.44, -1.0)--(8.48, -1.0);
++\draw[-,very thick](8.48, -1.2)--(8.52, -1.2);
++\draw[-,very thick](8.52, -1.0)--(8.56, -1.0);
++\draw[-,very thick](8.56, -1.2)--(8.6, -1.2);
++\draw[-,very thick](8.6, -1.0)--(8.64, -1.0);
++\draw[-,very thick](8.64, -1.2)--(8.68, -1.2);
++\draw[-,very thick](8.68, -1.0)--(8.72, -1.0);
++\draw[-,very thick](8.72, -1.2)--(8.76, -1.2);
++\draw[-,very thick](8.76, -1.4)--(8.8, -1.4);
++\draw[-,very thick](8.8, -1.2)--(8.84, -1.2);
++\draw[-,very thick](8.84, -1.0)--(8.88, -1.0);
++\draw[-,very thick](8.88, -0.8)--(8.92, -0.8);
++\draw[-,very thick](8.92, -1.0)--(8.96, -1.0);
++\draw[-,very thick](8.96, -0.8)--(9.0, -0.8);
++\draw[-,very thick](9.0, -0.6)--(9.04, -0.6);
++\draw[-,very thick](9.04, -0.8)--(9.08, -0.8);
++\draw[-,very thick](9.08, -0.6)--(9.12, -0.6);
++\draw[-,very thick](9.12, -0.8)--(9.16, -0.8);
++\draw[-,very thick](9.16, -1.0)--(9.2, -1.0);
++\draw[-,very thick](9.2, -0.8)--(9.24, -0.8);
++\draw[-,very thick](9.24, -0.6)--(9.28, -0.6);
++\draw[-,very thick](9.28, -0.4)--(9.32, -0.4);
++\draw[-,very thick](9.32, -0.6)--(9.36, -0.6);
++\draw[-,very thick](9.36, -0.8)--(9.4, -0.8);
++\draw[-,very thick](9.4, -1.0)--(9.44, -1.0);
++\draw[-,very thick](9.44, -1.2)--(9.48, -1.2);
++\draw[-,very thick](9.48, -1.4)--(9.52, -1.4);
++\draw[-,very thick](9.52, -1.2)--(9.56, -1.2);
++\draw[-,very thick](9.56, -1.0)--(9.6, -1.0);
++\draw[-,very thick](9.6, -1.2)--(9.64, -1.2);
++\draw[-,very thick](9.64, -1.4)--(9.68, -1.4);
++\draw[-,very thick](9.68, -1.2)--(9.72, -1.2);
++\draw[-,very thick](9.72, -1.4)--(9.76, -1.4);
++\draw[-,very thick](9.76, -1.2)--(9.8, -1.2);
++\draw[-,very thick](9.8, -1.4)--(9.84, -1.4);
++\draw[-,very thick](9.84, -1.6)--(9.88, -1.6);
++\draw[-,very thick](9.88, -1.8)--(9.92, -1.8);
++\draw[-,very thick](9.92, -2.0)--(9.96, -2.0);
++\draw[-,very thick](9.96, -2.2)--(10.0, -2.2);
++\draw[-,very thick](10.0, -2.4)--(10.04, -2.4);
++\end{tikzpicture}
++\end{center}
++
++The Central Limit Theorem tells us that $B_t-B_s\sim N(0,t-s)$.  Additionally,  \[\var[B_t]=\lim_{N\to\infty}\dfrac{\lfloor tN\rfloor}{N}=t\] and \[\cov[B_s,B_t]=s\] for $s\leq t$.\\
++
++\textbf{Definition} A \emph{standard Brownian motion} is a stochastic process $\{B_t\}_{t\geq 0}$ such that \begin{enumerate}[(i)]
++\item $B_0=0$
++\item $B_t-B_s\sim N(0,t-s)$ $-$ that is, the variance of an increment is proportional to the time difference
++\item $B_t-B_s$ is indepenedent of $B_v-B_u$ for $u<v\leq s<t$ 
++\end{enumerate}
++
++That is, Brownian motion is the stochastic process with independent Gaussian increments $-$ i.e., how it moves in an interval just depends on the length of that interval, not where it is.\\
++
++\textbf{Example} Suppose a stream of energetic particules is absorbed by some object and the energy is slowly released from that object.  Suppose at time $t$, the proportion of energy that remains in the object from a particle absorbed $t$ time units ago is $e^{-t}$.  Assuming that the object only absorbs energy at times $t=0,1,2,\dots$, let $X_t$ be the amount of energy absorbed at time $t$.  Let $Z_n$ be the total energy contained in the object at time $n$.  Then \[Z_n=\sum_{k=0}^\infty e^{-k}X_{n-k}.\]
++
++We can scale the $x$ and $y$ axes $-$ let \[Z_{\lfloor tN\rfloor}=\frac{1}{\sqrt{N}}\sum_{k=0}^\infty e^{-k/N}X_{\lfloor tN\rfloor-k}.\]  Then \[Z_{\lfloor tN\rfloor}\xrightarrow{N\to\infty}Z_t.\] \\\\
++
++\textbf{\Large September 26}\\
++
++\textbf{Note about previous example} If we start with Brownian motion and incorporate exponential decay, a more general central limit theorem applies (for more information, look up Lindeberg-Feller condition).\\
++
++\textbf{Definition} Random variables $Z_1,\dots,Z_n$ (which we can think of as a random vector of length $n$, $(Z_1,\dots,Z_n)$) are \emph{jointly Gaussian} if for any $a_1,\dots,a_n\in\R$, we have $\style\sum_{k=1}^n a_kZ_k\sim N(m,\sigma^2)$ for some $m$, $\sigma^2$.  That is, these random variables are jointly Gaussian if and only if any linear combination of them is univariate Gaussian.\\
++
++\textbf{Definition/Notation} Suppose that the random variables $(Z_1,\dots,Z_n)$ are jointly Gaussian.  Let $Z=(Z_1,\dots,Z_n)$.  Define a vector of means \[\mu=\left(\begin{array}{ccc}
++\mu_1 \\ \vdots \\ \mu_n
++\end{array}\right),\] where $\mu_i$ is the mean of $Z_i$.  Define the $n\times n$ covariance matrix $\Sigma=\left\{\Sigma_{i,j}\right\}$, where $\Sigma_{i,j}=\cov[Z_i,Z_j]$.  Then we write $Z\sim N(\mu, \Sigma)$.\\
++
++Now, suppose that we have $Z$, $\mu$, and $\Sigma$ as in the above definition, and let $a_1,\dots,a_n\in\R$.  Let $a=\left(\begin{array}{c}
++a_1\\ \vdots\\ a_n\\
++\end{array}\right).$\\ Then we know that $\style\sum_{k=1}^n a_kZ_k\sim N(m,\sigma^2)$ for some $m$, $\sigma^2$.  A small amount of algebraic manipulation yields the following equations:
++\[m=\sum_{k=1}^n a_k\mu_k=a^T\mu,\] and \[\sigma^2=\sum_{1\leq i,j\leq n} a_i\Sigma_{i,j}a_j=a^T\Sigma a.\]\\
++
++\textbf{Example} We can have random variables that are marginally Gaussian (that is, each of them have Gaussian distributions themselves) but that are not jointly Gaussian.  Let $X\sim N(0,1)$ and $Y\sim N(0,1)$ be independent random variables.  Let $Z=\mathrm{sign}(X)|Y|$.  So $X$ and $Z$ are ``almost" independent, but have the same sign as each other.  Then $X$ and $Z$ both have Gaussian distributions, but $X$ and $Z$ are not jointly Gaussian.\\
++
++\textbf{Definition} A \emph{Gaussian process} on an index set $T$ is a collection of random variables $\{X_t\}_{t\in T}$ such that for any $n\in\Z_{>0}$, for any $(t_1,\dots,t_n)\in T^n$, $(X_{t_1},\dots,X_{t_n})$ is jointly Gaussian.  It is \emph{centered} if $\E[X_t]=0$ for all $t$.\\
++
++\textbf{Example} Let $Z\sim N(\mu, \Sigma)$, where $Z=(Z_1,\dots,Z_n)$.  Then $Z$ is a Gaussian process on the index set $\{1,2,\dots,n\}$.\\
++
++\textbf{Example} $\{B_t\}_{t\geq 0}$, Brownian motion, is a Gaussian process on $[0,\infty)$.\\\\\\
++
++\textbf{\Large Facts About Jointly Gaussian Variables and Gaussian Processes}\\
++
++\begin{enumerate}[(i)]
++
++\item If $Z\in\R^n$ and $Z\sim N(\mu,\Sigma)$ (that is, $Z$ is an $n$-dimensional multivariate Gaussian), then \[\E[f(Z)]=\int_{\R^n}f(x)\dfrac{1}{\sqrt{(2\pi)^n\mathrm{det}(\Sigma)}}\exp\left(\dfrac{-(x-\mu)^T\Sigma^{-1}(x-\mu)}{2}\right)dx.\]
++
++\item The distribution of a Gaussian process is determined by its mean, $\mu(t)=\E[X_t]$ and covariance (also called covariance kernel) $\sigma^2(s,t)=\cov[X_s,X_t]$.
++
++\item Covariance kernels are positive semidefinite.  Given a Gaussian process on $T$, where $T$ is a measure space, we can use this to define an inner product on some subset of the set of functions $T\to\R$ (I don't know what the subset is that we need to take in order for this definition to make sense).  Given $f,g:T\to \R$, define $\langle f,g\rangle_{\sigma}=\sum_{s\in T}\sum_{t\in T}f(s)g(t)\sigma^2(s,t)$ and $\|f\|_\sigma=\langle f,f\rangle_\sigma\geq 0$.
++
++\textbf{Example} For Brownian motion, $\E[B_t]=0$, $\cov[B_s,B_t]=\sigma^2(s,t)=\mathrm{min}(s,t)$.  So, for $f,g:[0,\infty)\to\R$, \[\langle f,g\rangle_\sigma=\int_0^\infty\int_0^\infty f(s)g(t)\mathrm{min}(s,t)\,ds\,dt.\]
++
++\item If you have a linear space $V$, with a symmetric positive definite inner product $\langle\cdot,\cdot \rangle$, and a countable orthonormal basis $\{\varphi_k\}_{k=1}^{\infty}$, then you can define a centered isomorphic Gaussian process, i.e. a Gaussian process on $V$ such that $\E[X_t]=0$ for all $t\in V$, and $\cov[X_s,X_t]=\langle s,t\rangle$.  That is, you can construct random variables and index them using $V$ in such a way that the covariance of two random variables is equal to the inner product of their indices.
++
++This can be done in the following way.  Let $\{Z_k\}_{k=1}^\infty$ be independent, identically distributed (iid) variables each with distribution $N(0,1)$.  For $t\in V$, which we can write as $t=\sum_{k=1}^\infty \langle t,\varphi_k\rangle \varphi_k$, define $X_t=\sum_{k=1}^\infty \langle t,\varphi_k\rangle Z_k\in\R$.  Because $Z_k$ are independent, and each have variance $1$, \[\cov[Z_i,Z_j]=\left\{\begin{array}{cc}
++1 & \text{if }i=j\\
++0 & \text{if }i\neq j\\
++\end{array}\right.\]
++and so \begin{align*}
++\cov[X_s,X_t]&=\cov\left[\sum_k\langle s,\varphi_k\rangle Z_k,\,\,\sum_j\langle t,\varphi_j\rangle Z_j\right]\\
++&=\sum_{j,k}\langle s,\varphi_k\rangle \langle t,\varphi_j\rangle \cov[Z_k,Z_j]\\
++&=\sum_j\langle s,\varphi_j\rangle \langle t,\varphi_j\rangle\\
++&=\langle s,t\rangle.
++\end{align*}
++
++\textbf{Example} Suppose we wanted to construct a Gaussian process with covariance matrix \[\Sigma=\left(\begin{array}{ccc}
++1 & \frac{1}{2} & 0\\
++\frac{1}{2} & 1 & \frac{1}{2}\\
++0 & \frac{1}{2} & 1\\
++\end{array}\right).\]
++
++That is, we want to construct random variables $X_{v_1}$, $X_{v_2}$, $X_{v_3}$, where $v_1,v_2,v_3\in\R^3$, such that for any pair $X_{v_i}$, $X_{v_j}$, we have $\cov[X_{v_i},X_{v_j}]=\langle v_i,v_j\rangle=\Sigma_{i,j}$, where $\Sigma_{i,j}$ is the entry in the $i$th row and $j$th column of our covariance matrix.
++
++If we start with three independent random variables, each with distribution $N(0,1)$, we can use the process above to construct $X_{v_1},X_{v_2},X_{v_3}$.  In order to do this, however, we first need to determine what $v_1$, $v_2$, and $v_3$ are.  To do this, we will use the fact that we need $\langle v_i,v_j\rangle=\Sigma_{i,j}$.
++
++I wasn't able to write down anything coherent about the discussion about how to do this/why it exists, so this is a gap.
++
++Once we have $v_1,v_2,v_3$, then we can start with $Z_{v_1}$, $Z_{v_2}$, $Z_{v_3}$, independent and each with distribution $N(0,1)$, we can construct $X_{v_1}$, $X_{v_2}$, $X_{v_3}$ using the process described above.
++
++\item Linear transformations of Gaussians are Gaussian: if $Z=(Z_1,\dots,Z_n)\sim N(\mu,\Sigma)$ and $A\in\R^{k\times n}$, then $AZ\sim N(A\mu, A\Sigma A^T)$.
++
++Example: Let $\Sigma= kk^T$ be the Cholesky decomposition of $\Sigma$, and let $Z=(Z_1,\dots,Z_n)$ independent, each with distribution $N(0,1)$.  Then if we let $(X_1,X_2,X_3)=X=kZ$, then $X\sim N(0,kIk^T=\Sigma)$.
++
++If $X,Y$ are jointly Gaussian, then $X$ and $Y$ are independent if and only if $\cov[X,Y]=0$.
++
++\end{enumerate}
++
++\end{document}
+\ No newline at end of file

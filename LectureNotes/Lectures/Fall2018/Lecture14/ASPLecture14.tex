@@ -1,0 +1,206 @@
+% ==============================================================================
+
+
+
+\documentclass[../../../Master/AppliedStochastics.tex]{subfiles}
+
+
+
+% ==============================================================================
+
+
+\author{Helen}
+\date{24 October 2018}
+
+
+% ==============================================================================
+%
+\begin{document}
+%
+% ==============================================================================
+
+
+\makelecture
+
+
+\section{Theory}
+
+Let $(X_t)_{t \geq 0}$ be a time-homogeneous Markov process
+    on a locally compact, separable metric space $S$,
+    and define $C_0 \defeq C_0(S)$ to be the set of
+        all continuous functions $f \colon S \to \bbR$ vanishing at infinity,
+        ie, given $\epsilon > 0$, there is a compact $K \subset S$ such that
+            $f(x) < \epsilon$ for all $x \in K$.
+Note that $C_0$ is a Banach space with the uniform norm:
+    $\norm{f}_{\infty} \defeq \sup_{x \in S} \abs{f(x)}$.
+Assume $\P(\{X_t \in S\}) = 1$ for all $t$.
+
+
+\begin{definition}
+Define the transition semigroup $(P_t)_{t \geq 0}$ by
+    $(P_t f)(x) \defeq \E^{x}[f(X_t)]$ for $f \in C_0$. 
+\end{definition}
+
+
+\begin{note}
+The assumption
+$$\begin{aligned}\label{Feller1}
+    (X_t | X_0 = x) \xrightarrow[x \to y]{d} (X_t | X_0 = y)
+\end{aligned}$$
+    implies $P_t \colon C_0 \to C_0$.
+\end{note}
+
+
+We have the following properties: 
+\begin{enumerate}
+    \item
+    $P_0 = I$ since $P_0 f(x) = \E^{x} [f(X_0)] = f(x)$.
+    
+    \item
+    $P_s P_t = P_{s + t}$ since
+    $$\begin{aligned}
+        P_s P_t f(x) = \E^{x}[P_t f(x_s) ]
+                     = \E^{x} [ \E^{x_s} [ f(x_t) ] ]
+                     = \E^{x} [ f(x_{t+s})]
+                     = P_{s+t} f(x)\,.
+    \end{aligned}$$
+    
+    \item[(3)] 
+    If we assume that
+    $$\begin{aligned}\label{Feller2}
+        (X_t | X_0 = x) \xrightarrow[t \to 0]{d} x
+    \end{aligned}$$
+        for each $x$ then
+    $P_t \to \id$ as $t \to 0$. 
+\end{enumerate}
+
+
+\begin{definition}
+    The generator of $(X_t)_{t \geq 0}$ and/or $(P_t)_{t \geq 0}$ is
+    $$\begin{aligned}
+        G = \lim_{\epsilon \to 0} \dfrac{1}{\epsilon} (P_{\epsilon} - \id)
+    \end{aligned}$$
+        and 
+    $$\begin{aligned}\label{pt}
+        P_t = e^{tG} = \sum_{n \geq 0} \dfrac{t^{n}}{n!} G^n
+    \end{aligned}$$
+    if the above statements make sense. 
+\end{definition}
+
+
+\begin{note}
+    If $(X_t)_{t \geq 0}$ satisfies \eqref{Feller1} and \eqref{Feller2}
+        it is said to be \defn{Feller}.
+    The generator of a Feller process uniquely determines its distribution. This is clear from \eqref{pt} when it makes sense.
+    To prove this claim in general, use resolvents. 
+\end{note}
+
+
+The generator has the following properties:
+\begin{enumerate}
+    \item
+        $G 1 = 0$ since $(P_t - \id)1(x) = \E^{x}[1 - 1] = 0$
+    
+    \item
+    $\pi$ is a stationary measure for $(X_t)_{t \geq 0}$ if and only if 
+    $$\begin{aligned}
+        \int G f(x) \dif \pi(x) = 0
+    \end{aligned}$$
+        for all $f$. 
+\end{enumerate}
+
+
+Next we consider some examples. 
+\begin{example}
+    Let $Gf(x) = f'(x)$.
+    Then 
+    $$\begin{aligned}
+        P_t f(x) = \sum_{n \geq 0} \dfrac{t^{n}}{n!} f^{(n)}(x)
+                 = \sum_{n \geq 0} \dfrac{t^{n}}{n!} f^{(n)}(x + t - t)
+                 = f(x+t)\,.
+    \end{aligned}$$
+    So $X_t = X_0 + t$.
+    Therefore, $(d/dx)$ corresponds to ``deterministic flow at rate 1.''
+\end{example}
+
+
+\begin{example}
+    Let $Gf(x) = \dfrac{1}{2} f''(x)$.
+    Recall that this is the generator for Brownian motion. 
+    Then 
+    $$\begin{aligned}
+        P_t f(x) = \sum_{n \geq 0} \dfrac{2^{-n} t^{n}}{n!} f^{(2n)}(x)\,.
+    \end{aligned}$$
+    Denote by $\widehat{f}(\xi)$ the Fourier transform of $f$.
+    Then
+    $$\begin{aligned}
+        \widehat{P_t f}(x)
+            = \sum_{n \geq 0} \dfrac{2^{-n}t^{n}}{n!}
+                (-\xi^2)^{n} \hat{f}(\xi)
+            = e^{-\frac{t}{2} \xi^2} \widehat{f}(\xi)\,.
+    \end{aligned}$$
+    Because $e^{-(t/2) \xi^2}$ is the Fourier transform of
+        the Gaussian density with variance $t$,
+        and the Fourier transform takes convolution to multiplication,
+    $$\begin{aligned}
+        P_t f(x) = \sum_{n \geq 0} \dfrac{2^{-n}t^{n}}{n!} f^{(2n)}(x) 
+                 = \int_{-\infty}^{\infty} \dfrac{1}{\sqrt{ 2 \pi t }}
+                    e^{-\dfrac{(y-x)^2}{2t}} f(y) dy\,.
+    \end{aligned}$$
+\end{example}
+
+
+It turns out that if $Gf(x) = f^{(k)}(x)$ for $k > 2$,
+    $G$ is not the generator of a Feller process.
+One reason for this is that for $k > 2$ there is no way
+    to write a discrete approximation to $f^{(k)}(x)$ as a sum
+    over values of $f$ with all coefficients except that of $f(x)$ positive.
+More generally, we can appeal to the following theorem.
+\begin{theorem}[Hille-Yosida Theorem]
+    Let $A$ be a linear operator on $\mathcal{D} \subset C_0$.
+    Then $A$ has closure that is the generator of a Feller process
+        if and only if
+    \begin{enumerate}[(i)]
+    \item
+    $\mathcal{D}$ is dense in $C_0$;
+    
+    \item
+    the range of $\lambda - A$ is dense in $C_0$ for some $\lambda > 0$;
+    
+    \item (Positive Maximum Principle)
+    if $f(x) \leq f(x_0)$ for all $x \in S$ and $f(x_0) > 0$,
+        then $A f(x_0) \leq 0$.
+    \end{enumerate}
+\end{theorem}
+
+
+\begin{note}
+    If all three conditions in the above theorem hold,
+        then $(\lambda - A)^{-1}$ exists for all $\lambda > 0$.
+    To see this, suppose that $\lambda - A$ is not invertible on $C_0$
+        for some $\lambda > 0$. 
+    Then there exists $f \in C_0$ such that $Af = \lambda f$.
+    Then $\E^x[f(X_t)] = e^{t \lambda} f(x)$.
+    But $\E^x[f(X_t)]$ is bounded since $f \in C_0$,
+        so we have reached a contradiction. 
+\end{note}
+
+
+\begin{note}
+    If $A = \lim\limits_{t \to 0} \frac{1}{t} (P_t - \id)$,
+        then third condition automatically holds.
+    For if
+    $$\begin{aligned}
+        A f(x_0) = \lim_{t \to 0} \frac{1}{t} (P_t - \id) f(x_0)
+                 = \lim_{t \to 0} \frac{1}{t} \E^{x_0} [f(x_t) - f(x_0)]\,.
+    \end{aligned}$$
+    Since $f(x_t) - f(x_0) \leq 0$ by assumption,
+        $\E^{x_0} [f(x_t) - f(x_0)] \leq 0$, and $A f(x_0) \leq 0$. 
+\end{note}
+
+
+% ==============================================================================
+%
+\end{document}
+%
+% ==============================================================================

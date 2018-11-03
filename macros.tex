@@ -1,0 +1,42 @@
+%%
+% Add your macros here; they'll be included in pdf and html output.
+%%
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools} %For arrows with text above and below%
+
+\newcommand{\Z}{\mathbb{Z}}    % integers
+\newcommand{\N}{\mathbb{N}}    % naturals
+\newcommand{\R}{\mathbb{R}}    % reals
+
+\newcommand{\E}{\mathbb{E}}    % expectation
+\renewcommand{\P}{\mathbb{P}}  % probability
+\DeclareMathOperator{\sd}{sd}
+\DeclareMathOperator{\var}{var}
+\DeclareMathOperator{\cov}{cov}
+
+% distributions
+\DeclareMathOperator{\Normal}{Normal}
+\DeclareMathOperator{\Poisson}{Poisson}
+\DeclareMathOperator{\Beta}{Beta}
+\DeclareMathOperator{\Binom}{Binomial}
+\DeclareMathOperator{\Gam}{Gamma}
+\DeclareMathOperator{\Exp}{Exponential}
+\DeclareMathOperator{\Cauchy}{Cauchy}
+\DeclareMathOperator{\Unif}{Unif}
+\DeclareMathOperator{\Dirichlet}{Dirichlet}
+
+\newcommand{\given}{\;\vert\;}
+
+\theoremstyle{definition}
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{coro}[thm]{Corollary}
+\newtheorem{lemma}[thm]{Lemma}
+\newtheorem{defn}[thm]{Definition}
+\newtheorem{exmp}[thm]{Example}
+\newtheorem{rmk}[thm]{Remark}
+\newtheorem{exer}[thm]{Exercise}
+\newtheorem{nota}[thm]{Notation}
+\newtheorem*{note}{Note}
+\newtheorem*{sol}{Solution}

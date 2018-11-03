@@ -1,0 +1,114 @@
+% ==============================================================================
+
+
+
+\documentclass[../../../Master/AppliedStochastics.tex]{subfiles}
+
+
+
+% ==============================================================================
+
+
+\author{Joe}
+\date{01 October 2018}
+
+
+% ==============================================================================
+%
+\begin{document}
+%
+% ==============================================================================
+
+
+\makelecture
+
+
+\section{A Different Construction of \texorpdfstring{$Z(f)$}{Z(f)}}
+
+
+\begin{definition}
+Define the \emph{Haar basis} $\{h_{n, k}\}_{n, k \in \bbN}$ for $L^2([0,1])$ by
+    $h_{0, 0} \equiv 1$ and
+\begin{equation*}
+    h_{n, k}(t) \defeq \begin{cases}
+        2^{(n-1)/2}     &\text{if }
+            2^{- n} (2^k) \leq t < 2^{-n}(2k+1)\,,\\
+        - 2^{(n-1)/2}   &\text{if }
+            2^{-n} (2k+1) \leq t < 2^{- n} (2k+2)\,,\\
+        0               &\text{otherwise}
+                       \end{cases}
+\end{equation*}
+    if $n \geq 1$ and $0 \leq k \leq 2^{n-1}$
+        (otherwise set $h_{n, k} \equiv 0$).
+\end{definition}
+
+
+It is easily verified that $\{h_{n, k}\}$ is an orthonormal set in $L^2([0,1])$,
+    ie,
+\begin{equation*}
+    \int_0^1 h_{n, k}(t) h_{m, \ell}(t) \dif t = 
+    \begin{cases}
+        1 & \text{if $n = m$ and $k = \ell$},\\
+        0 & \text{otherwise}
+    \end{cases}
+\end{equation*}
+Now suppose $\{Z_{n, k}\}$ is a collection of independent $N(0,1)$ variables
+    and  $f \in L^2([0,1])$ expands as
+\begin{equation*}
+    f(t) = \sum_{n = 0}^\infty \sum_{k = 0}^{2^{n-1}} a_{n, k} h_{n, k}(t)
+        \,,\quad\text{where}\quad a_{n, k} = \int_0^1 f(t) h_{n, k}(t) \dif t\,.
+\end{equation*}
+The random variable $Z(f)$ defined by 
+\begin{equation*}
+    Z(f) \defeq \sum_{n = 0}^\infty \sum_{k = 0}^{2^{n-1}} a_{n, k} Z_{n, k}
+\end{equation*}
+    gives a Gaussian process $\{Z(f)\}$ for which
+\begin{equation*}
+    \cov[Z(f), Z(g)]
+        = \sum_{n = 0}^\infty \sum_{k = 0}^{2^{n-1}}
+            \sum_{m = 0}^\infty \sum_{\ell = 0}^{2^{m-1}}
+            a_{n, k} b_{m, \ell} \cov[Z_{n, k},Z_{m, k}]
+        = \sum_{n = 0}^\infty \sum_{k = 0}^{2^{n-1}} a_{n, k}b_{n, k}\,.
+\end{equation*}
+In particular we have 
+\begin{equation*}
+    \var[Z(f)] = \sum_{n = 0}^\infty \sum_{k = 0}^{2^{n-1}} a_{n, k}^2
+               = \int_0^1 \abs{f(t)}^2 \dif t\,,
+\end{equation*}
+    where the latter equality is given by Parseval's identity
+    (see page 85 of Rudin's \emph{Real \& Complex Analysis}).
+In the following example we see that Brownian motion can again
+    be constructed by applying $Z$ to a particular collection of functions.
+ 
+ 
+\begin{example}[L\'evy's Construction]
+    Setting $B_t = Z(\mathbf{1}_{[0,t)})$ for $t\in[0,1]$,
+        we have
+    \begin{equation*}
+        a_{n, k} = \int_0^1\ mathbf{1}_{[0,t)} h_{n,k}(s) \dif s
+                 = \int_0^t h_{n, k}(s) \dif s
+     \end{equation*}
+        and
+    \begin{equation*}
+        B_t = \sum_{n = 0}^\infty \sum_{k = 0}^{2^{n-1}} Z_{n, k}
+            \int_0^t h_{n, k}(s) \dif s.
+    \end{equation*}
+    Since $Z$ is linear (with respect to $f$),
+        for $s\leq t$ we have 
+    \begin{equation*}
+        \cov[B_t - B_s] = \cov[Z(\mathbf{1}_{[0,t)}) - Z(\mathbf{1}_{[0,s)})]
+                        = \cov[Z(\mathbf{1}_{[s,t)})]
+                        = \norm{\mathbf{1}_{[s,t)}}_2^2
+                        = t - s\,.
+    \end{equation*}
+\end{example}
+
+\section{The Brownian Bridge}
+Let $U_t=(B_t\mid B_1=0)$ for $0\leq t\leq 1$. Since $B_1=Z_{0,0}$, we have $$U_t=(B_t\mid Z_{0,0}=0)=\sum_{n=1}^\infty\sum_{k=1}^{2^{n-1}}Z_{n,k}\int_0^th_{n,k}(s)\,ds=B_t-tB_t.$$
+
+
+% ==============================================================================
+%
+\end{document}
+%
+% ==============================================================================

@@ -1,0 +1,14 @@
+This folder contains the material for the lecture notes.
+It is a modular document.
+  The Master folder contains the master file and the documentclass file.
+  The Main folder contains the lecture notes themselves.
+
+Each lecture should be its own file.
+The file name should be ASPLecture##
+  (although it technically doesn't matter as long as it has no spaces).
+There is a template file in this folder.
+If the file is being included with the notes,
+  or is in a cloned folder structure with the master file,
+  then the |subfiles| documentclass should be used.
+If the file is being compiled on its own,
+  the |fillsntsx| documentclass should be used.

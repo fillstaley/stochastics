@@ -1,0 +1,166 @@
+% ==============================================================================
+
+
+
+\documentclass[../../../Master/AppliedStochastics.tex]{subfiles}
+
+
+
+% ==============================================================================
+
+
+\author{Nathan Hunter}
+\date{12 October 2018}
+
+
+% ==============================================================================
+%
+\begin{document}
+%
+% ==============================================================================
+
+
+\makelecture
+
+
+%\textbf{Homework Problem:}
+%    Spiders live at the points of a PPP on a long wire with uniform intensity of 0.1 per centimeter. Each claims the area withint 2 cm on either side, so a fly landing on the wire is attacked by all spiders within 2 cm of it.
+%
+%
+%\begin{enumerate}
+%    \item
+%    A fly lands on the wire independent of the spiders.
+%    What is the probability that the fly is safe?
+%
+%    \item
+%    We have a PPP of flies (independent of the spiders)
+%        with uniform intensity 0.1 per cm landing on a 1 meter section of wire.
+%    Let $F_k=\#\,\{\textrm{flies attacked by $k$ spiders}\}$.
+%    What is $\mathbb{P}\{F_k=n\}$?
+%
+%    \item \emph{Bonus:} Compute the mean and variance of the total length
+%        of wire in a 1 meter section \emph{not} claimed by spiders.
+%\end{enumerate}
+
+%\hrulefill\\\\
+
+\textbf{More rain:} a hailstorm falls on our patio for 1 hour. The rate of hailstones having mass $x$ grams is $\dfrac{1}{x}e^{-x}$ stones per hour (in total on the patio). Assume the hail is pure ice (water has density 1 gram per cubic cm).
+
+\begin{enumerate}
+\item How many hailstones have mass greater than 0.01 grams fall?
+
+\item How many hailstones total fall?
+
+\item Pick a random stone with mass greater than 1 gram. What is the chance it weighs more than 2 grams?
+
+\item What is the total weight of all hails?
+
+\item Line up the hailstones side-by-side. What is the total length of hail?
+\end{enumerate}
+
+\textbf{1).} Let $N([a,b])=\#\,\{\textrm{hailstones with mass $a\leq x\leq b$}$. Then $N\sim PPP(\mu)$ on $(0,\infty)$ with $d\mu(x)=\dfrac{1}{x}e^{-x}dx$. Thus
+$$N([0.01,\infty))\sim\textrm{Pois}\left( \int_{0.01}^\infty \frac{1}{x}e^{-x}dx\right).$$
+
+Define $E(x)=\int_x^\infty\frac{1}{y}e^{-y}dy$. Then $\mathbb{E}[N([0.01,\infty))]=E(0.01)=4.03793$ (from an integral table) and $\textrm{var}[N([0.01,\infty))]=E(0.01)=4.03793$.\\
+
+\textbf{2).} How many hailstones total fall? $\mathbb{E}[N([\epsilon,\infty))]=E(\epsilon)\xrightarrow{\epsilon\searrow0}\infty$ so $\mathbb{P}\{N(0,\infty))=\infty\}=1$. Picture: with the patio as the horizontal axis and $x$ as the vertical axis, there's high density of low $x$ values along the patio.\\
+
+\textbf{Property:} \emph{(conditional uniformity)} Let $N\sim PPP(\mu)$ on $X$ and $A\subset X$ with $\mu(A)<\infty$. Conditioned on $N(A)$, the points of $N$ that fall in $A$ are i.i.d. with distribution proportional to $\mu$; i.e. if $B\subset A$ then $$\mathbb{P}\{N(B)=k | N(A)=n\} = {{n}\choose{k}} \left(\frac{\mu(B)}{\mu(A)}\right)^k\left( 1-\frac{\mu(B)}{\mu(A)}\right)^{n-k}.$$\\
+
+\textbf{3).} Let $B=[2,\infty)$ and $A=[1,\infty)$. The mass of stones with mass greater than 1 gram has probability density $\dfrac{\frac{1}{x}e^{-x}}{E(1)}$ for $x\geq 1$. So $$\mathbb{P}\{\textrm{stone}>2g|\textrm{stone}>1g\}=\dfrac{E(2)}{E(1)}=0.2228992.$$\\
+
+\textbf{4).} Let $W=\int_0^\infty x\,dN(x)=\sum_ix_i=\textrm{total wieght of all hailstones}$. We find the mean and variance of $W$. $$\mathbb{E}[W]=\int_0^\infty x\frac{1}{x}e^{-x}\,dx=1\,\textrm{gram}$$
+since $\mathbb{E}[\int f\,dN]=\int f\,d\mu$.\\
+
+\textbf{Lemma:} $\textrm{var}[\int f(x)\,dN(x)]=\int f(x)^2\,d\mu(x)$.\\
+
+\textit{Proof:} Let $C_j^{(\epsilon)}$ be a partition of $X$ with all $C_j^{(\epsilon)}$ be ``$\epsilon$-small", and let $z_j^{(\epsilon)}\in C_j^{(\epsilon)}$ be the center of each $C_j^{(\epsilon)}$. Then
+$$\int f(x)\,dN(x)=\sum_if(x_i)\approx\sum_j N(C_j^{(\epsilon)})f(z_j^{(\epsilon)})$$
+so 
+\[\begin{split}
+\textrm{var}\left[  \int f(x)\,dN(x) \right] &\approx \textrm{var}\left[\sum_j N(C_j^{(\epsilon)})f(z_j^{(\epsilon)}) \right]\\
+&=\sum\textrm{var}[ N(C_j^{(\epsilon)})f(z_j^{(\epsilon)})]\\
+&=\sum f(z_j^{(\epsilon)})^2\mu(C_j^{(\epsilon)})\\
+&\xrightarrow{\epsilon\searrow0}\int f(x)^2d\mu(x)   \qquad \blacksquare
+\end{split}\]
+
+Thus $\textrm{var}[W]=\int_0^\infty x^2\frac{1}{x}e^{-x}\,dx=1$.\\
+
+\textbf{5).} Since the density of water is 1 g/$\textrm{cm}^3$, $\mathbb{E}[\textrm{length}]=\int_0^\infty x^{1/3}\frac{1}{x}e^{-x}\,dx=\Gamma(\frac{1}{3})$.
+
+\hrulefill\\\\
+
+\textbf{Fact:} if $X$ and $Y$ are random variables, $\mathbb{E}[e^{i\alpha X}]=\mathbb{E}[e^{i\alpha Y}]$ $\forall \alpha\in\mathbb{R}$ if and only if $X\overset{d}{=}Y$ (i.e. $\mathbb{P}\{X\in A\}=\mathbb{P}\{Y\in A\}$ for all $A$, or $\mathbb{E}[f(X)]=\mathbb{E}[f(Y)]$ for all $f$).\\
+
+The \emph{characteristic function} for $X$ is $\phi_X(\alpha)=\mathbb{E}[e^{i\alpha X}]$; in other words, $\phi_X$ is the Fourier transform of the density function $f_X$ of $X$.\\
+Characteristic functions are convenient for calculating moments, but \emph{not} probabilities.\\
+
+\textbf{Lemma:} Let $\psi (\alpha)=\log\phi_X(\alpha)$ be the \emph{cumulant generating function}. Then $$\frac{d}{d\alpha}\psi(0)=i\,\mathbb{E}[X]$$
+$$\frac{d^2}{d\alpha^2}\psi(0)=-\textrm{var}[X]$$
+
+\textit{Proof:} \emph{(1)} 
+\[\begin{split}
+\frac{d}{d\alpha}\mathbb{E}[e^{i\alpha X}]&=\mathbb{E}\left[\frac{d}{d\alpha}e^{i\alpha X}\right]\\
+&=\mathbb{E}[iXe^{i\alpha X}]
+\end{split}\]
+so $\frac{d}{d\alpha}\psi(0)=\dfrac{\mathbb{E}[iXe^{i0 X}]}{\mathbb{E}[e^{i0 X}]}=i\mathbb{E}[X]$.\\
+
+\emph{(2)} Similarly:
+$$\frac{d^2}{d\alpha^2}\psi(\alpha)=\frac{ \mathbb{E}[-X^2e^{i\alpha X}]-\mathbb{E}[iXe^{i\alpha X}]^2   }{\mathbb{E}[ie^{i\alpha X}]^2}$$
+$$\frac{d^2}{d\alpha^2}\psi(0)=\mathbb{E}[X^2]=\mathbb{E}[X]^2=\textrm{var}[X]$$
+as desired. $\blacksquare$
+\newline
+
+
+
+\textbf{Characteristic functions:} Let $N\sim PPP$ on $X$ with intensity $\mu$ and let $f:X\rightarrow\mathbb{R}$. Then $$\mathbb{E}\left[\exp\left(i\alpha\int f(x)\,dN(x)\right)\right]=\exp\left(\int_X (e^{i\alpha f(x)}-1)\mu(dx) \right).$$
+
+\textit{Lemma:} If $Z\sim\textrm{Pois}(\gamma)$, then 
+$$\mathbb{E}[e^{i\alpha Z}]=\sum_{n\geq0}e^{i\alpha n}e^{-\gamma}\frac{\gamma^n}{n!}=e^{-\gamma}\sum_{n\geq 0}(\gamma e^{i\alpha})^n/n!=\exp(\gamma(e^{i\alpha}-1))$$
+
+
+\textit{Proof (theorem):} Let $f$ be piecewise constant $f(x)=f_i$ for $x\in A_i$ with $\sqcup_i A_i=X$. Then $\int f(x)\,dN(x)=\sum_i N(A_i)f_i$ (and the $N(A_i)$ are all independent) so 
+\[\begin{split}
+\mathbb{E}[e^{i\alpha \int f\,dN}]&=\mathbb{E}\left[\prod_je^{i\alpha N(A_j)f_j}\right]\\
+&=\prod_j\mathbb{E}[e^{i\alpha N(A_j)f_j}]\\
+&=\prod_j\exp(\mu(A_j)(e^{i\alpha f_j}-1))\\
+&=\exp\left( \int_X(e^{i\alpha f(x)}-1)\mu(dx) \right)  \qquad \blacksquare
+\end{split}\]
+
+
+\emph{Corollary:} $\mathbb{E}[\int f\,dN]=\int f\,d\mu$ and $\textrm{var}[\int f\,dN]=\int f^2\,d\mu$.\\
+
+Ex: \textbf{Cauchy process:} Let $N\sim PPP$ on $[0,\infty)\times(\mathbb{R}\backslash\{0\})$ with mean measure $\mu(dt,dx)=\dfrac{dt\,dx}{|x|^2}$.
+ Picture: with $t$ as the horizontal and $x$ as the vertical axes, higher density of points near the $t$-axis.\\
+
+Let $C_t=\int_0^t\int_\mathbb{R} x\,dN(s,x)=\textrm{sum of $x$-coordinates of points in $[0,t]\times\mathbb{R}$}$. 
+
+Note: 
+\[\begin{split}
+\mathbb{P}\{\textrm{no jumps in $[t,t+\epsilon)$}&=\mathbb{P}\{C_s=C_t:s\in[t,t+\epsilon)\}\\
+&=\mathbb{P}\{N([t,t+\epsilon)\times\mathbb{R})=0\}\\
+&=\exp\left(-\epsilon\int\frac{1}{|x|^2}dx\right)=0
+\end{split}\]
+
+Also:
+$$\mathbb{P}\{\textrm{no jumps bigger than $\delta$ in $[t,t+\epsilon)$}\}=\exp\left(-2\epsilon\int_\delta^\infty\frac{dx}{x^2}\right)=e^{-2\epsilon/\delta}.$$
+
+
+What is the distribution of $C_t$?
+
+\[\begin{split}
+\mathbb{E}[e^{i\alpha C_t}]&=\exp\left( \int_0^t\int_{-\infty}^\infty(e^{i\alpha X}-1)\frac{1}{|x|^2}dx\,dt  \right)\\
+&=\exp(-t|\alpha|)\\
+&=\int_{-\infty}^\infty e^{iz\alpha}\frac{dz}{\pi t(1+(z/t)^2)}
+\end{split}\]
+i.e. $C_t\sim\textrm{Cauchy}(t)=\textrm{probability density}\dfrac{1}{\pi t(1+(z/t)^2)}$.
+\\
+
+An interesting property: $C_n=C_1+(C_2-C_1)+...+(C_n-C_{n-1})=n\textrm{ i.i.d. }\sim C_1$. Thus $\frac{1}{n}C_n\overset{d}{=}C_1$ and $\textrm{var}[\frac{1}{n}C_n]=\frac{1}{n}\textrm{var}[C_1]$.
+
+
+% ==============================================================================
+%
+\end{document}
+%
+% ==============================================================================

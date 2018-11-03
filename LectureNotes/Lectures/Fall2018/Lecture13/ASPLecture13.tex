@@ -1,0 +1,195 @@
+% ==============================================================================
+
+
+
+\documentclass[../../../Master/AppliedStochastics.tex]{subfiles}
+
+
+
+% ==============================================================================
+
+
+\author{Helen}
+\date{22 October 2018}
+
+
+% ==============================================================================
+%
+\begin{document}
+%
+% ==============================================================================
+
+
+\makelecture
+
+
+\section{Examples}
+
+\begin{example}{Motivating example: Moments of the Poisson}
+    Let $(N_t)_{t \geq 0}$ be a Poisson counting process
+        where $N \sim \PPP(\text{constant rate 1})$ on $[0, \infty)$.
+    The fact that $(N_t)_{t \geq 0}$ is a Poisson counting process means
+        that $N_t \in \bbZ$ and $N_t$ ``jumps by 1 unit at rate 1'',
+        ie. $N_t = N([0, t]) + N_0$. 
+    Note that writing $N \sim \PPP(\text{constant rate 1})$
+        is the same as writing $N \sim \PPP(\lambda)$,
+            where $\lambda$ is the Lebesgue measure.
+    
+    
+    We want to answer the question:
+        What is $\E[N_t^k]$?
+    First we define
+    $$\begin{aligned}
+        \E^x[f(N_t)] \defeq \E[f(N_t) | N_0 = x ]\,.
+    \end{aligned}$$
+    We see that
+    $$\begin{aligned}\label{condexp1}
+        \E^x[f(N_t)] = f(x) + \int_0^t \frac{d}{ds} \E^x [f(N_s)] ds
+                    &= f(x) + \int_0^t \lim_{\epsilon \to 0}
+                        \frac{1}{\epsilon} \E^x [f(N_{s+\epsilon}) - f(N_s)]
+                        \dif s\\
+                    &= f(x) + \int_0^t  \lim_{\epsilon \to 0}
+                        \frac{1}{\epsilon} \E^x [
+                            \E^s [f(N_{s+\epsilon}) - f(N_s) | N_s] ] \dif s
+    \end{aligned}$$
+    This motivates the following definition.
+    \begin{definition}
+        Let
+        $$\begin{aligned}
+            (Gf)(y) \defeq \lim_{\epsilon \to 0} \frac{1}{\epsilon}
+                            \E^{y}[f(N_\epsilon) - f(y)]\,.
+        \end{aligned}$$
+    The function $G$ is called the \defn{generator} for $N_t$. 
+    \end{definition}
+    
+    
+    Since $N_\epsilon - N_0 \sim \Poisson(\epsilon)$, 
+    $$\begin{aligned}
+        Gf(x) &= \lim_{\epsilon \to 0} \frac{1}{\epsilon}
+                    \E^{x} [f(N_\epsilon) - f(x)] \\
+              &= \lim_{\epsilon \to 0} \frac{1}{\epsilon}
+                    \E[f(N_\epsilon) - f(x) | N_0 = x] \\
+              &= \lim_{\epsilon \to 0}  \frac{1}{\epsilon}
+                    (\P \{ N_\epsilon - N_0 = 0 \} ( f(x) - f(x) ) +
+                    \P \{ N_\epsilon - N_0 = 1 \} ( f(x+1) - f(x) ) \\
+              &\qquad + \P \{ N_\epsilon - N_0 \geq 2 \} \E[f(N_\epsilon)
+                      - f(x) | N_\epsilon - N_0 \geq 2 ] ) \\
+              &= \lim_{\epsilon \to 0}  \frac{1}{\epsilon}
+                    \left( e^{-\epsilon} \cdot \epsilon \cdot (f(x+1) - f(x)) + \sum_{n \geq 2} \dfrac{e^{-\epsilon} \epsilon^n}{n!}
+                        \E[f(N_\epsilon) - f(x) | N_\epsilon - N_0 \geq 2 ]
+                    \right) \\
+              &= \lim_{\epsilon \to 0} \frac{1}{\epsilon} 
+                    \left( e^{-\epsilon} \cdot \epsilon \cdot (f(x+1) - f(x)) +
+                         \mathcal{O}(\epsilon^2) \right) \\
+              & = f(x+1) - f(x)
+    \end{aligned}$$
+    So $Gf(x) = f(x + 1) - f(x)$ is the generator
+        for the constant rate 1 Poisson process. 
+     
+    By the Markov property, 
+    $$\begin{aligned}
+        \lim_{\epsilon \to 0} \frac{1}{\epsilon}
+            \E^x [ \E^s [f(N_{s+\epsilon}) - f(N_s) | N_s] ] = \E^x[Gf(N_s)]\,.
+    \end{aligned}$$
+    It follows from this and \eqref{condexp1} that
+    $$\begin{aligned}\label{condexp2}
+        \E^x[f(N_t)] = f(x) + \int_0^t \E^x [f(N_s + 1) - f(N_s) ] \dif s
+    \end{aligned}$$
+    
+     
+    Next we need the following notation.
+    Define $(x)_m \defeq x(x-1) \cdots (x-m+1)$ and observe that 
+    $$\begin{aligned}
+        (x+1)_m - (x)_m
+            &= (x+1) x (x-1) \cdots (x-m+2) - x (x-1) \cdots (x-m+1)\\
+            &= ( (x+1) - (x-m+1) ) (x)_{m-1} \\
+            &= m (x)_{m-1}\,.
+    \end{aligned}$$
+    Now by \eqref{condexp2},
+    $$\begin{aligned}
+        \E^0 [ (N_t)_m ] = 0 + \int_0^{t} \E^{0} [(N_s+1)_m - (N_s)_{m}] \dif s
+                         = 0 + \int_0^{t} m \E^{0} [(N_s)_{m-1}] \dif s 
+    \end{aligned}$$
+        and $\E^0 [ (N_t)_0 ] = 1$. 
+    
+    Let 
+    $$\begin{aligned}
+        g_{m}(t) \defeq \int_0^{t} m \E^{0} [(N_s)_{m-1}] \dif s
+    \end{aligned}$$ 
+        and let $g_0(t) = 1$. 
+    Then $g_{m}(t) = \int_0^{t} m g_{m-1}(s) \dif s$,
+        so
+    $$\begin{aligned}
+        g_1(t) &= \E^0 [N_t]          =  \int_{0}^{t}  1   \dif s = t \\
+        g_2(t) &= \E^0 [N_t(N_t - 1)] =  \int_{0}^{t}  2 s \dif s = t^2 \\
+    \end{aligned}$$
+        and by induction,
+    $$\begin{aligned}
+        \E^0 [(N_t)_m] = g_m(t) = t^m
+    \end{aligned}$$
+\end{example}
+
+
+\begin{example}{What is the generator for Brownian motion?}
+    Let $(B_t)_{t \geq 0}$ be a Brownian motion,
+        ie. $B_{t+s} - B_t \sim \Normal(0, s)$. 
+    Then
+    $$\begin{aligned}
+        \E^x[f(B_\epsilon)]
+            &\approx \E^x[ f(x) + f'(x) (B_\epsilon - x) +
+                \frac{1}{2}f''(x) (B_\epsilon - x)^2 + \cdots] \\
+            &=       f(x) + f'(x)\cdot 0 + \frac{1}{2}f''(x) \cdot \epsilon +
+                \mathcal{O}(\epsilon^{3/2})
+    \end{aligned}$$
+    So
+    $$\begin{aligned}
+        \lim_{\epsilon \to 0} \dfrac{1}{\epsilon}
+            \E^{x}[ f(B_\epsilon) - f(x) ] = \dfrac{1}{2} f''(x)
+    \end{aligned}$$
+        and thus $Gf(x) = \dfrac{1}{2} f''(x)$ is the generator
+        for standard Brownian motion.
+\end{example}
+
+\begin{example}{How can we make $N_t$ into Brownian motion?}
+    We know that:
+    \begin{enumerate}
+        \item
+        By the Central Limit Theorem, adding up independent noise,
+            centering and scaling gets you the Gaussian distribution.
+        
+        \item
+        $N_t$ is the number of points in a PPP on $[0, t]$,
+            and so is a sum of a bunch of independent things.
+        
+        \item
+        Brownian motion started at zero has $\E[B_t] = 0$, $\E[B_t^2] = t$.
+    \end{enumerate}
+    $N_t$ does not have enough noise in each interval to be Brownian.
+    So consider $N_{M t}$.
+    Since $\E[N_{M t}] = M t$, we can subtract $Mt$,
+        and then divide by $\sqrt{M}$ to get the correct variance.
+    Thus we define
+    $$\begin{aligned}
+        X_t^{(M)} = \dfrac{ N_{M t} - M t}{\sqrt{M}}
+    \end{aligned}$$
+    
+    Let $G_M$ denote the generator of $X_t^{(M)}$.
+    Then
+    $$\begin{aligned}
+        G_M f(x) = M \left(f \left(x + \frac{1}{\sqrt{M}}\right)
+                            - f(x)\right) - \dfrac{1}{\sqrt{M}} f'(x)\,.
+    \end{aligned}$$
+    This is discussed in more detail on Day 15. 
+    As $M \to \infty$, $G_M f(x) \to \dfrac{1}{2} f''(x)$. 
+    Therefore, 
+    $$\begin{aligned}
+        (X^{(M)})_{t \geq 0} \xrightarrow[M \to \infty]{d} (B_t)_{t \geq 0}
+    \end{aligned}$$
+\end{example}
+
+
+% ==============================================================================
+%
+\end{document}
+%
+% ==============================================================================
