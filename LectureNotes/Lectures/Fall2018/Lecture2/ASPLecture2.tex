@@ -23,7 +23,231 @@
 \makelecture
 
 
-\blindtext[3]
+\textbf{Note about previous example}
+If we start with Brownian motion and incorporate exponential decay,
+    a more general central limit theorem applies
+    (for more information, look up Lindeberg-Feller condition).
+
+
+\begin{definition}
+    Random variables $Z_1, \dots, Z_n$
+        (which we can think of as a random vector of length $n$,
+            $(Z_1, \dots, Z_n)$)
+    are \emph{jointly Gaussian} if for any $a_1, \dots, a_n \in \bbR$,
+    we have
+    \begin{equation*}
+        \sum_{k = 1}^n a_k Z_k \sim N(m, \sigma^2)
+    \end{equation*}
+        for some $m$, $\sigma^2$.
+    That is, these random variables are jointly Gaussian if and only if
+        any linear combination of them is univariate Gaussian.
+\end{definition}
+
+
+\textbf{Definition/Notation}
+Suppose that the random variables $(Z_1, \dots, Z_n)$ are jointly Gaussian.
+Let $Z=(Z_1, \dots, Z_n)$.
+Define a vector of means
+\begin{equation*}
+    \mu = \left(\begin{array}{ccc}
+            \mu_1 \\ \vdots \\ \mu_n
+          \end{array}
+          \right)\,,
+\end{equation*}
+    where $\mu_i$ is the mean of $Z_i$.
+Define the $n \times n$ covariance matrix
+    $\Sigma = \left\{\Sigma_{i, j}\right\}$,
+    where $\Sigma_{i, j} = \cov[Z_i, Z_j]$.
+Then we write $Z \sim N(\mu, \Sigma)$.
+
+
+Now, suppose that we have $Z$, $\mu$, and $\Sigma$ as in the above definition,
+    and let $a_1, \dots, a_n \in \bbR$.
+Let
+\begin{equation*}
+    a = \left(\begin{array}{c}
+        a_1\\ \vdots\\ a_n\\
+        \end{array}\right)
+\end{equation*}
+Then we know that $\displaystyle\sum_{k = 1}^n a_k Z_k \sim N(m, \sigma^2)$
+    for some $m$, $\sigma^2$.
+A small amount of algebraic manipulation yields the following equations:
+\begin{equation*}
+    m = \sum_{k = 1}^n a_k \mu_k = a^T \mu
+\end{equation*}
+    and
+\begin{equation*}
+    \sigma^2 = \sum_{1\leq i, j\leq n} a_i \Sigma_{i, j} a_j = a^T \Sigma a\,.
+\end{equation*}
+
+
+\textbf{Example}
+We can have random variables that are marginally Gaussian
+    (that is, each of them have Gaussian distributions themselves)
+    but that are not jointly Gaussian.
+Let $X \sim N(0, 1)$ and $Y \sim N(0, 1)$ be independent random variables.
+Let $Z = \mathrm{sign}(X)|Y|$.
+So $X$ and $Z$ are ``almost'' independent,
+    but have the same sign as each other.
+Then $X$ and $Z$ both have Gaussian distributions,
+    but $X$ and $Z$ are not jointly Gaussian.
+
+
+\begin{definition}
+    A \emph{Gaussian process} on an index set $T$ is a collection of
+        random variables $\{X_t\}_{t \in T}$ such that
+            for any $n \in \bbN$, for any $(t_1, \dots, t_n) \in T^n$,
+            $(X_{t_1}, \dots, X_{t_n})$ is jointly Gaussian.
+    It is \emph{centered} if $\E[X_t] = 0$ for all $t$.
+\end{definition}
+
+
+\textbf{Example}
+Let $Z \sim N(\mu, \Sigma)$, where $Z = (Z_1, \dots, Z_n)$.
+Then $Z$ is a Gaussian process on the index set $\{1, 2, \dots, n\}$.
+
+
+\textbf{Example}
+Suppose that $\{B_t\}_{t \geq 0}$ is a Brownian motion,
+    then it is a Gaussian process on $[0,\infty)$.
+
+
+\textbf{\Large Facts About Jointly Gaussian Variables and Gaussian Processes}
+
+
+\begin{enumerate}[(i)]
+    \item
+    If $Z \in \bbR[n]$ and $Z \sim N(\mu,\Sigma)$
+        (that is, $Z$ is an $n$-dimensional multivariate Gaussian),
+        then
+    \begin{equation*}
+        \E[f(Z)] = \int_{\bbR[n]}
+            f(x) \dfrac{1}{\sqrt{(2\pi)^n \mathrm{det}(\Sigma)}}
+            \exp\left(\dfrac{- (x - \mu)^T \Sigma^{-1} (x - \mu)}{2}\right)
+                \dif x.
+    \end{equation*}
+    
+    \item
+    The distribution of a Gaussian process is determined by its mean, 
+        $\mu(t)=\E[X_t]$ and covariance
+            (also called covariance kernel) $\sigma^2(s, t) = \cov[X_s, X_t]$.
+    
+    \item
+    Covariance kernels are positive semidefinite.
+    Given a Gaussian process on $T$, where $T$ is a measure space,
+        we can use this to define an inner product on some subset of
+            the set of functions $T \to \bbR$
+    (I don't know what the subset is that we need to take
+        in order for this definition to make sense).
+    Given $f, g \colon T \to \bbR$, define
+    \begin{equation*}
+        \inner{f, g}_{\sigma} \defeq \sum_{s \in T} \sum_{t \in T}
+            f(s) g(t) \sigma^2(s, t)
+    \end{equation*}
+        and $\norm{f}_\sigma^2 = \inner{f, f}_\sigma \geq 0$.
+    
+    
+    \textbf{Example}
+    For Brownian motion,
+        $\E[B_t]=0$, $\cov[B_s, B_t] = \sigma^2(s, t) = \mathrm{min}(s, t)$.
+    So, for $f, g \colon [0, \infty) \to \bbR$,
+    \begin{equation*}
+        \inner{f, g}_\sigma = \int_0^\infty \int_0^\infty
+            f(s) g(t) \mathrm{min}(s, t) \dif s \dif t\,.
+    \end{equation*}
+
+
+    \item
+    If you have a linear space $V$,
+        with a symmetric positive definite inner product $\inner{\cdot, \cdot}$,
+        and a countable orthonormal basis $\{\phi_k\}_{k = 1}^{\infty}$,
+            then you can define a centered isomorphic Gaussian process,
+            ie. a Gaussian process on $V$ such that $\E[X_t] = 0$
+                for all $t \in V$ and $\cov[X_s, X_t] = \inner{s, t}$.
+    That is, you can construct random variables
+        and index them using $V$ in such a way that
+        the covariance of two random variables is equal to
+        the inner product of their indices.
+
+
+    This can be done in the following way.
+    Let $\{Z_k\}_{k=1}^\infty$ be independent, identically distributed (iid)
+        variables each with distribution $N(0, 1)$.
+    For $t \in V$, which we can write as
+        $t = \sum_{k = 1}^\infty \inner{t, \varphi_k} \varphi_k$,
+        define $X_t = \sum_{k=1}^\infty \inner{t, \varphi_k} Z_k \in \bbR$.
+    Because $Z_k$ are independent, and each have variance $1$,
+    \begin{equation*}
+        \cov[Z_i, Z_j] = \left\{\begin{array}{cc}
+                            1 & \text{if } i = j \\
+                            0 & \text{if } i \neq j \\
+                         \end{array}\right.
+    \end{equation*}
+        and so
+    \begin{align*}
+        \cov[X_s, X_t] &= \cov\left[\sum_k \inner{s, \varphi_k} Z_k,
+                            \sum_j \inner{t, \varphi_j} Z_j\right] \\
+                       &= \sum_{j, k} \inner{s, \varphi_k} \inner{t, \varphi_j}
+                            \cov[Z_k, Z_j] \\
+                       &= \sum_j \inner{s, \varphi_j} \inner{t, \varphi_j} \\
+                       &= \inner{s, t}\,.
+    \end{align*}
+
+
+    \textbf{Example}
+    Suppose we wanted to construct a Gaussian process with covariance matrix
+    \begin{equation*}
+        \Sigma = \left(\begin{array}{ccc}
+                1 & \frac{1}{2} & 0\\
+                \frac{1}{2} & 1 & \frac{1}{2}\\
+                0 & \frac{1}{2} & 1\\
+                 \end{array}\right)\,.
+    \end{equation*}
+    
+    
+    That is, we want to construct random variables
+        $X_{v_1}$, $X_{v_2}$, $X_{v_3}$, where $v_1, v_2, v_3 \in \bbR[3]$,
+            such that for any pair $(X_{v_i}, X_{v_j})$, we have 
+            $\cov[X_{v_i}, X_{v_j}] = \inner{v_i, v_j} = \Sigma_{i, j}$,
+        where $\Sigma_{i, j}$ is the entry in the $i$th row and $j$th column
+            of our covariance matrix.
+    
+    
+    If we start with three independent random variables,
+        each with distribution $N(0, 1)$,
+        we can use the process above to construct $X_{v_1}, X_{v_2}, X_{v_3}$.
+    In order to do this, however,
+        we first need to determine what $v_1$, $v_2$, and $v_3$ are.
+    To do this,
+        we will use the fact that we need $\inner{v_i, v_j} = \Sigma_{i,j}$.
+    
+    
+    (I wasn't able to write down anything coherent about the discussion
+        about how to do this/why it exists, so this is a gap.)
+    
+    
+    Once we have $v_1, v_2, v_3$,
+        then we can start with $Z_{v_1}, Z_{v_2}, Z_{v_3}$,
+        independent and each with distribution $N(0, 1)$,
+        we can construct $X_{v_1}, X_{v_2}, X_{v_3}$
+        using the process described above.
+
+
+    \item
+    Linear transformations of Gaussians are Gaussian:
+        if $Z = (Z_1, \dots, Z_n) \sim N(\mu, \Sigma)$
+            and $A \in \R^{k \times n}$, then $A Z \sim N(A \mu, A \Sigma A^T)$.
+    
+    Example:
+        Let $\Sigma= k k^T$ be the Cholesky decomposition of $\Sigma$,
+            and let $Z = (Z_1, \dots, Z_n)$ independent,
+            each with distribution $N(0, 1)$.
+    Then if we let $(X_1, X_2, X_3) = X = k Z$,
+        then $X \sim N(0, k I k^T = \Sigma)$.
+    
+    If $X, Y$ are jointly Gaussian,
+        then $X$ and $Y$ are independent if and only if $\cov[X, Y] = 0$.
+\end{enumerate}
 
 
 % ==============================================================================
